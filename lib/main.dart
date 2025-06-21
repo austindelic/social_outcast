@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/chat_screen.dart';
 import 'screens/account_screen.dart';
 import 'screens/dashboard_screen.dart';
+import 'screens/story_screen.dart';
 
 void main() => runApp(const MyApp());
 
