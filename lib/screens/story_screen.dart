@@ -10,8 +10,8 @@ class StoryScreen extends StatelessWidget {
       body: VisualNovelReader(
         novel: VisualNovel(
           title: 'The Social Outcast',
-          backgroundAsset: 'assets/backgrounds/scene1.png',
-          characterAsset: 'assets/characters/hero.png',
+          backgroundAsset: 'assets/images/backgrounds/example.png',
+          characterAsset: 'assets/images/sprites/example.png',
           introText: 'Welcome to your journey. What is your name?',
         ),
         onInput: (name) {

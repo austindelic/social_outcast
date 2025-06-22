@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../lib/lib/visual_novel/models.dart';
+import './visual_novel.dart';
 
 class VisualNovelReader extends StatefulWidget {
   final VisualNovel novel;
@@ -35,15 +35,16 @@ class _VisualNovelReaderState extends State<VisualNovelReader> {
     return Stack(
       children: [
         // Background
+
         Positioned.fill(
-          child: Image.asset(widget.novel.background, fit: BoxFit.cover),
+          child: Image.asset(widget.novel.backgroundAsset, fit: BoxFit.cover),
         ),
         // Sprite
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 180),
-            child: Image.asset(widget.novel.sprite, height: 300),
+            child: Image.asset(widget.novel.characterAsset, height: 300),
           ),
         ),
         // Textbox and input
