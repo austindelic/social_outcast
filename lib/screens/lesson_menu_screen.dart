@@ -8,12 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LessonMenuScreen extends ConsumerStatefulWidget {
   static const String routeName = '/lesson-menu';
-  const LessonMenuScreen({Key? key}) : super(key: key);
+  const LessonMenuScreen({super.key});
 
   @override
   _LessonMenuScreenState createState() => _LessonMenuScreenState();
 }
-
 
 class Lesson {
   final String genre;
@@ -52,7 +51,8 @@ class _LessonMenuScreenState extends ConsumerState<LessonMenuScreen> {
   }
 
   Future<void> generateLessons() async {
-    final routeArgs = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final routeArgs =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     int index = routeArgs!['index'];
     print('Generating lessons...');
     final genres = '''
@@ -64,7 +64,7 @@ class _LessonMenuScreenState extends ConsumerState<LessonMenuScreen> {
     final selectedLevel = ref.read(preferenceProvider)[index].level;
     final lessonResponce = await GeminiHelper.generateLessons(
       genres,
-      selectedLevel?? '',
+      selectedLevel ?? '',
       selectedGenre,
       selectedFromCountry,
       selectedToCountry,

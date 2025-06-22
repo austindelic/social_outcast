@@ -1,0 +1,384 @@
+4328f24 | Austin Delic | 2025-06-22 07:51:17 -0700 | Remove unused DashboardScreen import and reference from MainTabs
+0	2	lib/main.dart
+
+39501db | pe_tanman | 2025-06-22 07:42:28 -0700 | improved android icon
+-	-	android/app/src/main/ic_launcher-playstore.png
+-	-	android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+-	-	assets/images/icon/android_icon.png
+2	2	pubspec.yaml
+
+6368a6d | Austin Delic | 2025-06-22 07:38:53 -0700 | Add Google Fonts integration and refactor visual novel components for enhanced UI and functionality
+16	3	lib/main.dart
+11	5	lib/screens/story_screen.dart
+311	3	lib/utilities/database_helper.dart
+0	407	lib/utilities/detabase_helper.dart
+8	0	pubspec.lock
+1	0	pubspec.yaml
+2	0	visual_novel/lib/character_sprite.dart
+4	0	visual_novel/lib/visual_novel.dart
+8	4	visual_novel/lib/visual_novel_reader.dart
+
+cddec2f | pe_tanman | 2025-06-22 07:34:44 -0700 | added icon
+1	2	android/app/build.gradle.kts
+-	-	android/app/src/main/ic_launcher-playstore.png
+-	-	android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+-	-	assets/images/icon/ios_icon.png
+118	34	ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
+69	13	pubspec.lock
+10	0	pubspec.yaml
+
+0761bb8 | pe_tanman | 2025-06-22 07:34:42 -0700 | added icons
+30	114	ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/ios_icon 1.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/ios_icon 2.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/ios_icon.png
+6	0	ios/Runner/Assets.xcassets/Contents.json
+5	5	ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+-	-	ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png
+-	-	ios/Runner/Assets.xcassets/LaunchImage.imageset/ios_icon.png
+
+4610074 | Austin Delic | 2025-06-22 06:55:27 -0700 | Add country code mapping and country flag widget to enhance country list screen
+216	245	lib/screens/lesson_preferences_screen.dart
+
+e9a03b9 | pe_tanman | 2025-06-22 06:52:37 -0700 | menu design improved
+7	7	lib/screens/lesson_preferences_screen.dart
+0	1	lib/screens/map.dart
+
+6b21aa6 | Austin Delic | 2025-06-22 06:36:53 -0700 | Add country code mapping and country flag widget to enhance country list screen
+172	28	lib/screens/country_list_screen.dart
+50	160	lib/screens/map.dart
+16	1	lib/screens/story_screen.dart
+
+12dd9a1 | Austin Delic | 2025-06-22 06:36:49 -0700 | Implement country selection feature in map screen with dynamic level progression
+160	50	lib/screens/map.dart
+
+b5daf30 | pe_tanman | 2025-06-22 06:18:32 -0700 | change title
+1	1	lib/screens/map.dart
+
+cea8e26 | pe_tanman | 2025-06-22 06:17:33 -0700 | add progress saving feature
+3	6	lib/screens/lesson_preferences_screen.dart
+30	12	lib/screens/map.dart
+40	19	lib/utilities/database_helper.dart
+
+694515c | Austin Delic | 2025-06-22 05:48:00 -0700 | Add new background images and implement country list screen with database integration
+013677a | Austin Delic | 2025-06-22 05:32:31 -0700 | Refactor navigation: replace PuzzleRunnerScreen with LessonMenuScreen and LessonPreferencesScreen; reset currentLevel in MapScreen to 0
+2	2	lib/main.dart
+1	1	lib/screens/map.dart
+0	58	lib/screens/puzzle_runner_screen.dart
+
+beeeb57 | NanoMars | 2025-06-22 05:31:41 -0700 | working thingy
+24	36	lib/screens/country_list_screen.dart
+
+3cd6f29 | Austin Delic | 2025-06-22 05:15:33 -0700 | On master: jserhrfdgb
+147be83 | Austin Delic | 2025-06-22 05:15:33 -0700 | index on master: 9433f46 Merge branch 'dev' of https://github.com/austindelic/social_outcast
+8911c1f | Austin Delic | 2025-06-22 05:15:33 -0700 | untracked files on master: 9433f46 Merge branch 'dev' of https://github.com/austindelic/social_outcast
+281	0	lib/screens/select_course.dart
+
+e2532e4 | pe_tanman | 2025-06-22 03:36:14 -0700 | add map
+-	-	assets/images/backgrounds/activated_stage.png
+-	-	assets/images/backgrounds/deactivated_stage.png
+-	-	assets/images/backgrounds/pngegg.png
+35	10	lib/screens/map.dart
+8	0	pubspec.lock
+4	0	pubspec.yaml
+
+9433f46 | Austin Delic | 2025-06-22 03:27:57 -0700 | Merge branch 'dev' of https://github.com/austindelic/social_outcast
+13df7ee | Austin Delic | 2025-06-22 03:16:20 -0700 | Merge branch 'austin' of https://github.com/austindelic/social_outcast into dev
+5476355 | Austin Delic | 2025-06-22 03:13:37 -0700 | Add character sprites for Dawg and Platypus; update StoryScreen and VisualNovelReader for sprite management
+-	-	assets/images/sprites/dawg/{dawg.png => dawg_default.png}
+-	-	assets/images/sprites/dawg/{dawg think 1.png => dawg_thinking_1.png}
+-	-	assets/images/sprites/dawg/{dawg think 2.png => dawg_thinking_2.png}
+-	-	assets/images/sprites/dawg/{dawg think 3.png => dawg_thinking_3.png}
+-	-	assets/images/sprites/dawg/{dawg think 4.png => dawg_thinking_4.png}
+-	-	assets/images/sprites/platypus/platypus_default.png
+142	73	lib/screens/story_screen.dart
+7	0	pubspec.yaml
+56	4	visual_novel/lib/visual_novel_reader.dart
+
+4e248c7 | pe_tanman | 2025-06-22 01:54:41 -0700 | add database_helper
+0	2	lib/main.dart
+188	17	lib/utilities/detabase_helper.dart
+65	1	pubspec.lock
+1	0	pubspec.yaml
+
+6f3d32b | pe_tanman | 2025-06-22 01:46:57 -0700 | Add database helper classes for curriculum, trip, and unit management
+236	0	lib/utilities/detabase_helper.dart
+
+d2c3164 | pe_tanman | 2025-06-22 01:46:40 -0700 | Merge branch 'dev' of https://github.com/austindelic/social_outcast into dev
+ab67148 | NanoMars | 2025-06-22 01:45:26 -0700 | Refactor Puzzle and Lesson models for improved structure; update PuzzleRunnerScreen to utilize new model design
+98	22	culture_lessons/lib/src/models.dart
+24	11	lib/screens/puzzle_runner_screen.dart
+7	0	pubspec.lock
+
+6ad10dc | pe_tanman | 2025-06-22 01:00:36 -0700 | merge pubspec.lock
+7	0	pubspec.lock
+
+27856d2 | pe_tanman | 2025-06-22 01:00:34 -0700 | Merge branch 'dev' of https://github.com/austindelic/social_outcast into dev
+048ffdc | pe_tanman | 2025-06-22 00:59:47 -0700 | before merge
+2	0	.gitignore
+1	0	ios/Flutter/Debug.xcconfig
+1	0	ios/Flutter/Release.xcconfig
+43	0	ios/Podfile
+
+205daaf | pe_tanman | 2025-06-22 00:58:43 -0700 | feat: Add Country List Screen and Database Helper for Curriculum Management
+-	-	assets/images/backgrounds/map_background.png
+6	2	lib/main.dart
+23	37	lib/providers/preference_provider.dart
+74	0	lib/screens/country_list_screen.dart
+7	5	lib/screens/lesson_menu_screen.dart
+8	1	lib/screens/lesson_preferences_screen.dart
+33	9	lib/screens/map.dart
+99	0	lib/utilities/database_helper.dart
+153	1	pubspec.lock
+2	0	pubspec.yaml
+55	0	visual_novel/pubspec.lock
+
+a52215a | Austin Delic | 2025-06-22 00:47:32 -0700 | making live apple build test
+-	-	assets/images/backgrounds/example.png
+-	-	assets/images/backgrounds/japan_1.png
+-	-	assets/images/sprites/dawg/dawg think 1.png
+-	-	assets/images/sprites/dawg/dawg think 2.png
+-	-	assets/images/sprites/dawg/dawg think 3.png
+-	-	assets/images/sprites/dawg/dawg think 4.png
+-	-	assets/images/sprites/dawg/dawg.png
+-	-	assets/images/sprites/example.png
+-	-	assets/images/sprites/kitty.png
+-	-	assets/images/sprites/otter/otter_default.png
+-	-	assets/images/sprites/otter/otter_thinking_1.png
+-	-	assets/images/sprites/otter/otter_thinking_2.png
+-	-	assets/images/sprites/otter/otter_thinking_3.png
+92	0	lib/components/overlay_progress_bar.dart
+1	1	lib/components/stepping_stone_map.dart
+2	12	lib/screens/dashboard_screen.dart
+70	29	lib/screens/story_screen.dart
+7	3	pubspec.yaml
+16	13	visual_novel/lib/character_sprite.dart
+19	0	visual_novel/lib/visual_novel.dart
+139	31	visual_novel/lib/visual_novel_reader.dart
+0	19	visual_novel/lib/visual_novel_step.dart
+
+207c659 | NanoMars | 2025-06-22 00:46:52 -0700 | getting up to spees
+43	0	ios/Podfile
+36	0	ios/Podfile.lock
+1	0	ios/build/ios/XCBuildData/PIFCache/project/PROJECT@v11_mod=e1a544901d20b073862c319266dc9c59_hash=bfdfe7dc352907fc980b868725387e98plugins=1OJSG6M1FOV3XYQCBH7Z29RZ0FPR9XDE1-json
+1	0	ios/build/ios/XCBuildData/PIFCache/target/TARGET@v11_hash=2e118418b1e9f076978c157b6cd7aa16-json
+1	0	ios/build/ios/XCBuildData/PIFCache/target/TARGET@v11_hash=61c4db6275341ab9aa7e98f4b7936ebd-json
+1	0	ios/build/ios/XCBuildData/PIFCache/target/TARGET@v11_hash=a160d2c0001484f710a3eb04e9065d30-json
+1	0	ios/build/ios/XCBuildData/PIFCache/target/TARGET@v11_hash=bfb0bb88bc4127626e5fdaf3b63fa4dc-json
+1	0	ios/build/ios/XCBuildData/PIFCache/target/TARGET@v11_hash=d3714a9de4313c4c644b9f2ad23c38b1-json
+1	0	ios/build/ios/XCBuildData/PIFCache/target/TARGET@v11_hash=dc732618c16a905df3696b2e3b3e0698-json
+1	0	ios/build/ios/XCBuildData/PIFCache/target/TARGET@v11_hash=eb45fe28b0408644eb8f6f398781d616-json
+1	0	ios/build/ios/XCBuildData/PIFCache/workspace/WORKSPACE@v11_hash=(null)_subobjects=58742ab9f54b0dca5bb8d5ec0bbeaaad-json
+
+a279335 | NanoMars | 2025-06-22 00:45:06 -0700 | Update Xcode project configuration and remove culture_lessons dependency from pubspec.lock
+1	0	ios/Flutter/Debug.xcconfig
+1	0	ios/Flutter/Release.xcconfig
+112	0	ios/Runner.xcodeproj/project.pbxproj
+3	0	ios/Runner.xcworkspace/contents.xcworkspacedata
+0	7	pubspec.lock
+
+451945e | NanoMars | 2025-06-22 00:42:40 -0700 | Add culture_lessons package with models and PuzzleRunnerScreen integration (data format for lessons & stuff)
+5	0	culture_lessons/lib/culture_lessons.dart
+53	0	culture_lessons/lib/src/models.dart
+0	0	culture_lessons/lib/src/utils.dart
+11	0	culture_lessons/pubspec.yaml
+9	0	ios/.gitignore
+6	0	lib/main.dart
+45	0	lib/screens/puzzle_runner_screen.dart
+7	0	pubspec.lock
+3	0	pubspec.yaml
+55	0	visual_novel/pubspec.lock
+
+4bcb99f | pe_tanman | 2025-06-21 23:03:47 -0700 | merge branch 'add_lesson_menu' into integrate_menu_map
+0	2	pubspec.yaml
+
+0012477 | pe_tanman | 2025-06-21 23:03:46 -0700 | Merge branch 'add_lesson_menu' into integrate_menu_map
+77b7e37 | pe_tanman | 2025-06-21 22:43:00 -0700 | Merge branch 'add_lesson_menu'
+c0163ed | pe_tanman | 2025-06-21 22:42:40 -0700 | add env to gitignore
+2	0	.gitignore
+
+ba5537b | pe_tanman | 2025-06-21 22:26:41 -0700 | add auto suggestion lesson menu
+2	0	.gitignore
+14	0	ios/Podfile.lock
+10	1	lib/main.dart
+88	59	lib/screens/lesson_menu_screen.dart
+177	0	lib/utilities/llm_helper.dart
+16	0	pubspec.lock
+4	3	pubspec.yaml
+
+6b94294 | Austin Delic | 2025-06-21 21:21:01 -0700 | Add ProgressMap component and integrate into MapScreen; refactor StoryScreen for visual novel functionality
+102	0	lib/components/stepping_stone_map.dart
+15	0	lib/main.dart
+32	0	lib/screens/map.dart
+58	12	lib/screens/story_screen.dart
+83	58	visual_novel/lib/visual_novel_reader.dart
+19	0	visual_novel/lib/visual_novel_step.dart
+
+308471c | Austin Delic | 2025-06-21 20:07:25 -0700 | video story lib added and example images included with pubspec updated
+1	1	.vscode/tasks.json
+-	-	assets/example.png
+-	-	assets/images/backgrounds/example.png
+-	-	assets/images/sprites/example.png
+57	40	lib/screens/dashboard_screen.dart
+2	2	lib/screens/story_screen.dart
+4	0	pubspec.yaml
+4	3	visual_novel/lib/visual_novel_reader.dart
+
+2dfbd8e | pe_tanman | 2025-06-21 19:29:24 -0700 | save preference
+72	0	lib/providers/preference_provider.dart
+9	2	lib/screens/dashboard_screen.dart
+31	17	lib/screens/lesson_menu_screen.dart
+46	2	lib/screens/lesson_preferences_screen.dart
+30	0	lib/utilities/prefs_helper.dart
+104	0	pubspec.lock
+2	0	pubspec.yaml
+
+b5dfa43 | Austin Delic | 2025-06-21 18:24:29 -0700 | Refactor app structure to replace ChatScreen with StoryScreen and integrate visual novel functionality
+1	2	lib/main.dart
+14	61	lib/screens/story_screen.dart
+8	238	pubspec.lock
+2	1	pubspec.yaml
+17	0	visual_novel/lib/character_sprite.dart
+17	0	visual_novel/lib/visual_novel.dart
+86	0	visual_novel/lib/visual_novel_reader.dart
+8	0	visual_novel/pubspec.yaml
+
+dd5ebbe | pe_tanman | 2025-06-21 17:53:31 -0700 | add user preference
+1	0	ios/Flutter/Debug.xcconfig
+1	0	ios/Flutter/Release.xcconfig
+43	0	ios/Podfile
+36	0	ios/Podfile.lock
+112	0	ios/Runner.xcodeproj/project.pbxproj
+3	0	ios/Runner.xcworkspace/contents.xcworkspacedata
+8	3	lib/main.dart
+19	2	lib/screens/dashboard_screen.dart
+77	0	lib/screens/lesson_menu_screen.dart
+229	0	lib/screens/lesson_preferences_screen.dart
+0	72	lib/screens/story_screen.dart
+24	0	pubspec.lock
+1	0	pubspec.yaml
+
+2ba4c43 | Austin Delic | 2025-06-21 14:15:34 -0700 | Add StoryScreen and update main.dart imports; include npdart dependency
+1	0	lib/main.dart
+72	0	lib/screens/story_screen.dart
+238	1	pubspec.lock
+1	0	pubspec.yaml
+
+68b3860 | Austin Delic | 2025-06-21 13:52:19 -0700 | Merge pull request #1 from austindelic/basic-setup
+c56c553 | Austin Delic | 2025-06-21 13:51:53 -0700 | Add main tabs navigation and implement dashboard, chat, and account screens
+18	0	.vscode/tasks.json
+26	105	lib/main.dart
+30	0	lib/screens/account_screen.dart
+135	0	lib/screens/chat_screen.dart
+72	0	lib/screens/dashboard_screen.dart
+
+82a3897 | Austin Delic | 2025-06-21 13:12:57 -0700 | Refactor main app structure and integrate ChatScreen with AI response functionality
+108	95	lib/main.dart
+40	0	pubspec.lock
+2	2	pubspec.yaml
+
+5b1375e | Austin Delic | 2025-06-21 12:14:51 -0700 | init commit
+45	0	.gitignore
+33	0	.metadata
+16	0	README.md
+28	0	analysis_options.yaml
+14	0	android/.gitignore
+44	0	android/app/build.gradle.kts
+7	0	android/app/src/debug/AndroidManifest.xml
+45	0	android/app/src/main/AndroidManifest.xml
+5	0	android/app/src/main/kotlin/com/example/social_outcast/MainActivity.kt
+12	0	android/app/src/main/res/drawable-v21/launch_background.xml
+12	0	android/app/src/main/res/drawable/launch_background.xml
+-	-	android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+-	-	android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+18	0	android/app/src/main/res/values-night/styles.xml
+18	0	android/app/src/main/res/values/styles.xml
+7	0	android/app/src/profile/AndroidManifest.xml
+21	0	android/build.gradle.kts
+3	0	android/gradle.properties
+5	0	android/gradle/wrapper/gradle-wrapper.properties
+25	0	android/settings.gradle.kts
+34	0	ios/.gitignore
+26	0	ios/Flutter/AppFrameworkInfo.plist
+1	0	ios/Flutter/Debug.xcconfig
+1	0	ios/Flutter/Release.xcconfig
+616	0	ios/Runner.xcodeproj/project.pbxproj
+7	0	ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+8	0	ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+8	0	ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+101	0	ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
+7	0	ios/Runner.xcworkspace/contents.xcworkspacedata
+8	0	ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+8	0	ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+13	0	ios/Runner/AppDelegate.swift
+122	0	ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
+-	-	ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
+23	0	ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+-	-	ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png
+-	-	ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png
+-	-	ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png
+5	0	ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md
+37	0	ios/Runner/Base.lproj/LaunchScreen.storyboard
+26	0	ios/Runner/Base.lproj/Main.storyboard
+49	0	ios/Runner/Info.plist
+1	0	ios/Runner/Runner-Bridging-Header.h
+12	0	ios/RunnerTests/RunnerTests.swift
+122	0	lib/main.dart
+213	0	pubspec.lock
+89	0	pubspec.yaml
+30	0	test/widget_test.dart
