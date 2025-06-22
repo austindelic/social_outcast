@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 
 import 'package:visual_novel/visual_novel.dart'; // Your custom VN logic
 import '../components/overlay_progress_bar.dart';
+import '../utilities/database_helper.dart';
 
 const countryNameToCode = {
   'Australia': 'au',
@@ -77,103 +77,96 @@ class StoryScreen extends StatefulWidget {
 }
 
 class _StoryScreenState extends State<StoryScreen> {
-  List<Map<String, String>> messages = [
-    {
-      "role": "system",
-      "content":
-          "You are a friendly quizmaster AI. Generate a JSON array of 10 fun and educational multiple-choice questions about world cultures, traditions, or geography. Each question should be an object with the following fields: question (the question text), choices (an array of 3-5 possible answers), and answer (the correct answer, which must match one of the choices). Return only the JSON array, not a string or any extra commentary. Do not wrap the array in quotes or markdown. The output must be valid JSON and directly parsable. Example output: [ { \"question\": \"Which Japanese festival is known for its fireworks displays?\", \"choices\": [\"Hanami\", \"Obon\", \"Tanabata\", \"Setsubun\"], \"answer\": \"Tanabata\" }, { \"question\": \"In India, what is the name of the festival of colors?\", \"choices\": [\"Diwali\", \"Holi\", \"Navratri\", \"Ganesh Chaturthi\"], \"answer\": \"Holi\" } ]"
-    },
-    {
-      "role": "assistant",
-      "content":
-          "Welcome! Ready to test your knowledge of world cultures? Here is your quiz:",
-    },
-  ];
   List<VisualNovelStep> steps = [];
   int currentStep = 0;
   bool isThinkingAnimated = false;
 
   final mainCharacter = dawgSprite;
 
+  bool showHelp = false;
+  String? helpQuestion;
+  List<String> helpMessages = [];
+
   @override
   void initState() {
     super.initState();
-    // Initialise the steps with the assistant's first reply
-    steps.add(
-      VisualNovelStep(
-        text: messages.last["content"]!,
-        backgroundAsset: "assets/images/backgrounds/japan_1.png",
-        stateTag: "default",
-        expectsInput: false,
-        choices: ["Alice", "Bob", "Charlie"], // Example choices
-        showChoicesInsteadOfInput: true, // Use the new feature
-      ),
-    );
+    _loadQuizFromDatabase();
   }
 
-  Future<void> fetchNextStep(String userContent) async {
-    setState(() => isThinkingAnimated = true);
-
-    // Add user reply to messages
-    messages.add({"role": "user", "content": userContent});
-    final dio = Dio();
-    // Send conversation to ai.hackclub.com
-    final response = await dio.post(
-      'https://ai.hackclub.com/chat/completions',
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: {"messages": messages},
-    );
-    print(response);
-    // Parse assistant reply
-    String aiReply;
-    try {
-      aiReply = response.data["choices"][0]["message"]["content"];
-    } catch (_) {
-      aiReply = "Sorry, there was an error. Try again!";
+  Future<void> _loadQuizFromDatabase() async {
+    final puzzles = await PuzzleDatabaseHelper().getAllData();
+    if (puzzles != null && puzzles.isNotEmpty) {
+      setState(() {
+        steps = puzzles
+            .map(
+              (puzzle) => VisualNovelStep(
+                text: puzzle['prompt'] ?? '',
+                backgroundAsset: "assets/images/backgrounds/japan_1.png",
+                stateTag: "default",
+                expectsInput: false,
+                choices: [
+                  puzzle['option1']?.toString() ?? '',
+                  puzzle['option2']?.toString() ?? '',
+                  puzzle['option3']?.toString() ?? '',
+                  puzzle['option4']?.toString() ?? '',
+                ].where((c) => c.isNotEmpty).toList(),
+                showChoicesInsteadOfInput: true,
+              ),
+            )
+            .toList();
+      });
+    } else {
+      setState(() {
+        steps = [
+          VisualNovelStep(
+            text: "No quiz data found in database.",
+            backgroundAsset: "assets/images/backgrounds/japan_1.png",
+            stateTag: "default",
+            expectsInput: false,
+            choices: [],
+            showChoicesInsteadOfInput: false,
+          ),
+        ];
+      });
     }
-
-    // Add assistant reply to messages
-    messages.add({"role": "assistant", "content": aiReply});
-
-    // Parse reply for choices (primitive example; use RegEx/AI parsing for more)
-    final choiceRegex = RegExp(r'\[(.*?)\]', multiLine: true);
-    final matches = choiceRegex.allMatches(aiReply);
-    List<String>? choices;
-    if (matches.isNotEmpty) {
-      choices = matches.map((m) => m.group(1) ?? '').toList();
-      aiReply = aiReply.replaceAll(choiceRegex, '').trim();
-    }
-
-    // Guess if input is expected (no choices = expects input)
-    bool expectsInput = choices == null || choices.isEmpty;
-
-    // Append next step
-    setState(() {
-      steps.add(
-        VisualNovelStep(
-          text: aiReply,
-          backgroundAsset: "assets/images/backgrounds/japan_1.png",
-          stateTag: "default",
-          expectsInput: expectsInput,
-          choices: choices,
-        ),
-      );
-      currentStep++;
-      isThinkingAnimated = false;
-    });
   }
 
   void _handleInput(String value) async {
-    await fetchNextStep(value);
+    // await fetchNextStep(value);
   }
 
   void _handleChoice(String choice) async {
-    await fetchNextStep(choice);
+    // await fetchNextStep(choice);
+  }
+
+  void _showHelp(String question) {
+    setState(() {
+      showHelp = true;
+      helpQuestion = question;
+      helpMessages = [
+        'You are now chatting with the bot about this question. Ask anything you need to understand!',
+      ];
+    });
+  }
+
+  void _sendHelpMessage(String message) async {
+    // Here you would call your AI backend. For now, just echo.
+    setState(() {
+      helpMessages.add('You: $message');
+      helpMessages.add('Bot: (AI response placeholder)');
+    });
+  }
+
+  void _closeHelp() {
+    setState(() {
+      showHelp = false;
+      helpQuestion = null;
+      helpMessages = [];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
     final isEnd = false; // Never ends (infinite)
 
     return Scaffold(
@@ -184,12 +177,79 @@ class _StoryScreenState extends State<StoryScreen> {
           Positioned.fill(
             child: VisualNovelReader(
               character: mainCharacter,
-              step: steps[currentStep],
+              step: steps.isNotEmpty
+                  ? steps[currentStep]
+                  : VisualNovelStep(text: '', stateTag: 'default'),
               isThinkingAnimated: isThinkingAnimated,
               onInput: _handleInput,
               onChoice: _handleChoice,
+              // Pass help button builder
+              helpButtonBuilder: () => IconButton(
+                icon: Icon(Icons.help_outline, color: Colors.blue),
+                tooltip: 'Need help with this question?',
+                onPressed: () => _showHelp(steps[currentStep].text),
+              ),
             ),
           ),
+          if (showHelp)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.7),
+                child: Center(
+                  child: Card(
+                    margin: const EdgeInsets.all(24),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Help for:',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            helpQuestion ?? '',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 200,
+                            child: ListView(
+                              children: helpMessages
+                                  .map(
+                                    (m) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                      ),
+                                      child: Text(m),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  onSubmitted: (msg) => _sendHelpMessage(msg),
+                                  decoration: InputDecoration(
+                                    hintText: 'Ask your question...',
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: _closeHelp,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           // Overlay progress bar always on top
           OverlayProgressBar(
             currentStep: currentStep,
