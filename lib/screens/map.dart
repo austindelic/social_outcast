@@ -67,7 +67,7 @@ class _MapScreenState extends State<MapScreen> {
           child: Text('Move Next'),
         ),
       ),
-      appBar: AppBar(title: const Text('Progress Map Example')),
+      appBar: AppBar(title: const Text('Progress Map')),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
