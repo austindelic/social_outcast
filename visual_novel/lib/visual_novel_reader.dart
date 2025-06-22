@@ -2,6 +2,37 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'visual_novel.dart';
 
+class SpriteSwap extends StatelessWidget {
+  final String currentAsset;
+  final List<String> allAssets;
+  final double height;
+
+  const SpriteSwap({
+    required this.currentAsset,
+    required this.allAssets,
+    this.height = 600,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: allAssets.map((asset) {
+        return AnimatedOpacity(
+          opacity: asset == currentAsset ? 1.0 : 0.0,
+          duration: Duration.zero,
+          child: Image.asset(
+            asset,
+            height: height,
+            gaplessPlayback: true,
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
 class VisualNovelReader extends StatefulWidget {
   final Character character;
   final VisualNovelStep step;
@@ -43,18 +74,33 @@ class _VisualNovelReaderState extends State<VisualNovelReader>
     _bobAnim = Tween<double>(begin: 0, end: -20)
         .chain(CurveTween(curve: Curves.easeInOut))
         .animate(_bobController);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheSprites(context); // Pre-cache here!
+    });
+
     _updateAnimation();
   }
 
   @override
   void didUpdateWidget(covariant VisualNovelReader oldWidget) {
     super.didUpdateWidget(oldWidget);
+    precacheSprites(context); // Pre-cache if sprites changed!
     _updateAnimation();
-    // Pause or resume bobbing controller as appropriate
     if (_shouldAnimate()) {
       _bobController.stop();
     } else {
       _bobController.repeat(reverse: true);
+    }
+  }
+
+  void precacheSprites(BuildContext context) {
+    final allAssets = <String>{
+      ...widget.character.states.values.expand((state) =>
+          [if (state.asset.isNotEmpty) state.asset, ...state.assetFrames])
+    };
+    for (final path in allAssets) {
+      precacheImage(AssetImage(path), context);
     }
   }
 
@@ -95,10 +141,16 @@ class _VisualNovelReaderState extends State<VisualNovelReader>
       }
     }
 
-    Widget spriteWidget = Image.asset(
-      spriteAsset,
+    // Get all unique sprite asset paths
+    final allSpriteAssets = <String>{
+      ...widget.character.states.values.expand((state) =>
+          [if (state.asset.isNotEmpty) state.asset, ...state.assetFrames])
+    }.toList();
+
+    Widget spriteWidget = SpriteSwap(
+      currentAsset: spriteAsset,
+      allAssets: allSpriteAssets,
       height: 600,
-      gaplessPlayback: true,
     );
 
     // Bob/stretch when default and NOT animating
