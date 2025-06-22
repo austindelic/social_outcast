@@ -8,7 +8,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  int currentLevel = 2; // Zero-based index
+  int currentLevel = 0; // Zero-based index
 
   @override
   Widget build(BuildContext context) {

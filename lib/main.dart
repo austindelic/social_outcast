@@ -7,7 +7,6 @@ import 'screens/account_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/story_screen.dart';
 import 'screens/map.dart';
-import 'screens/puzzle_runner_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_outcast/screens/lesson_menu_screen.dart';
@@ -48,7 +47,8 @@ class _MainTabsState extends State<MainTabs> {
     MapScreen(),
     StoryScreen(),
     AccountScreen(),
-    PuzzleRunnerScreen(),
+    LessonMenuScreen(),
+    LessonPreferencesScreen(),
   ];
 
   void _onItemTapped(int idx) {
