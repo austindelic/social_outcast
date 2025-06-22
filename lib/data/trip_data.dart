@@ -1,9 +1,7 @@
 import 'package:culture_lessons/culture_lessons.dart';
 
-
-
-class TripData{
-static const countryNameToCode = {
+class TripData {
+  static const countryNameToCode = {
     'australia': 'au',
     'france': 'fr',
     'japan': 'jp',
@@ -14,15 +12,12 @@ static const countryNameToCode = {
     'india': 'in',
     // …add more as you need
   };
-   static int? getTripId(
-    String fromCountry,
-    String toCountry,
-  ) {
+  static int? getTripId(String fromCountry, String toCountry) {
     try {
       var trips = tripData.values.toList();
       return trips
           .firstWhere(
-            (trip) =>(trip) =>
+            (trip) =>
                 trip.fromCountry == fromCountry && trip.toCountry == toCountry,
           )
           .id;
@@ -49,7 +44,7 @@ static const countryNameToCode = {
 }
 
 class UnitData {
-    static final Map<String, String> questionTypeMap = {
+  static final Map<String, String> questionTypeMap = {
     'Transportation': 'fourOption',
     'Hotel Behavior': 'fourOption',
     'Accent': 'speech',
@@ -65,39 +60,27 @@ class UnitData {
     'Greetings and Introductions': 'speech',
     'Slang': 'speech',
   };
- static int getUnitId(
-    String fromCountry,
-    String toCountry,
-    String genre,
-  ) {
+  static int getUnitId(String fromCountry, String toCountry, String genre) {
     try {
       var tripId = TripData.getTripId(fromCountry, toCountry);
       return unitData.values
-          .firstWhere(
-            (unit) =>
-                unit.tripId == tripId && unit.title == genre,
-          )
+          .firstWhere((unit) => unit.tripId == tripId && unit.title == genre)
           .id;
     } catch (e) {
       return 0;
     }
   }
+
   static final List<String> genres = questionTypeMap.keys.toList();
   static Map<int, Unit> unitData = (() {
     final data = <int, Unit>{};
     int unitId = 1;
     for (var trip in TripData.tripData.values) {
       for (var genre in genres) {
-        data[unitId] = Unit(
-          id: unitId,
-          tripId: trip.id,
-          title: genre,
-        );
+        data[unitId] = Unit(id: unitId, tripId: trip.id, title: genre);
         unitId++;
       }
     }
     return data;
   })();
 }
-
-
