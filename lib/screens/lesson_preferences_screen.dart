@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_outcast/providers/preference_provider.dart';
-import 'package:social_outcast/screens/lesson_menu_screen.dart';
 import 'package:social_outcast/utilities/database_helper.dart';
 import 'package:social_outcast/utilities/prefs_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 class LessonPreferencesScreen extends ConsumerStatefulWidget {
   static const String routeName = '/lesson-preferences';
@@ -63,10 +61,9 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
       );
       UserPreferences.setName(_selectedName);
       MyCurriculumDatabaseHelper().insertData(
-        _selectedName,
-        _selectedFromCountry,
-        _selectedToCountry,
-        _selectedTopic,
+        fromCountry: _selectedFromCountry,
+        toCountry: _selectedToCountry,
+        purpose: _selectedTopic,
       );
       
       Navigator.pop(context);
