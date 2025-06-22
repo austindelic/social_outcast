@@ -92,7 +92,7 @@ class _StoryScreenState extends State<StoryScreen> {
   List<VisualNovelStep> steps = [];
   int currentStep = 0;
   bool isThinkingAnimated = false;
-  final mainCharacter = dawgSprite;
+  final mainCharacter = platypusSprite;
   bool showHelp = false;
   String? helpQuestion;
   List<String> helpMessages = [];
@@ -115,7 +115,7 @@ class _StoryScreenState extends State<StoryScreen> {
   }
 
   Future<void> _loadQuizFromDatabase() async {
-    final puzzles = await PuzzleDatabaseHelper().getAllData();
+    final puzzles = await MyCurriculumDatabaseHelper().getAllData();
     if (puzzles != null && puzzles.isNotEmpty) {
       setState(() {
         steps = puzzles
