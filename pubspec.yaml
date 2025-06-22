@@ -1,3 +1,4 @@
+# pubsec.yaml for social_outcast
 name: social_outcast
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
@@ -36,6 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   dio: ^5.4.3 # (or latest version)
   npdart: ^0.3.0
+  visual_novel:
+    path: ./visual_novel
+  culture_lessons:
+    path: ./culture_lessons
+  sqflite: ^2.4.2
   flutter_riverpod: ^2.6.1
   shared_preferences: ^2.5.3
   sqflite: ^2.4.2
@@ -62,6 +68,21 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/backgrounds/japan_1.png
+
+    - assets/images/sprites/otter/otter_default.png
+    - assets/images/sprites/otter/otter_thinking_1.png
+    - assets/images/sprites/otter/otter_thinking_2.png
+    - assets/images/sprites/otter/otter_thinking_3.png
+
+    - assets/images/sprites/dawg/dawg_default.png
+    - assets/images/sprites/dawg/dawg_thinking_1.png
+    - assets/images/sprites/dawg/dawg_thinking_2.png
+    - assets/images/sprites/dawg/dawg_thinking_3.png
+
+    - assets/images/sprites/platypus/platypus_default.png
 
   # To add assets to your application, add an assets section, like this:
   assets:
