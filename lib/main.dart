@@ -4,8 +4,6 @@ import 'screens/dashboard_screen.dart';
 import 'screens/story_screen.dart';
 import 'screens/map.dart';
 import 'screens/puzzle_runner_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:culture_lessons/culture_lessons.dart';
 
 
 void main() => runApp(const MyApp());
