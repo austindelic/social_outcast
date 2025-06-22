@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:visual_novel/visual_novel.dart';
-import 'package:visual_novel/visual_novel_step.dart';
+import '../components/overlay_progress_bar.dart';
+// Import your VN core, e.g. visual_novel.dart, character_sprite.dart, etc.
 
 class StoryScreen extends StatefulWidget {
   const StoryScreen({super.key});
@@ -10,61 +11,101 @@ class StoryScreen extends StatefulWidget {
 
 class _StoryScreenState extends State<StoryScreen> {
   int currentStep = 0;
-  String? userName;
+  bool isThinkingAnimated = false;
+
+  final mainCharacter = Character(
+    states: {
+      "default": CharacterSpriteState(
+        tag: "default",
+        asset: "assets/images/sprites/otter/otter_default.png",
+      ),
+      "thinking": CharacterSpriteState(
+        tag: "thinking",
+        assetFrames: [
+          "assets/images/sprites/otter/otter_thinking_1.png",
+          "assets/images/sprites/otter/otter_thinking_2.png",
+          "assets/images/sprites/otter/otter_thinking_3.png",
+        ],
+      ),
+    },
+  );
 
   late final List<VisualNovelStep> steps = [
     VisualNovelStep(
       text: "Welcome! What is your name?",
-      backgroundAsset: "assets/images/backgrounds/example.png",
-      characterAsset: "assets/images/sprites/example.png",
+      backgroundAsset: "assets/images/backgrounds/japan_1.png",
+      stateTag: "default",
       expectsInput: true,
     ),
     VisualNovelStep(
-      text: "Nice to meet you!",
-      backgroundAsset: "assets/images/backgrounds/example.png",
-      characterAsset: "assets/images/sprites/example.png",
+      text: "This is a test!!",
+      backgroundAsset: "assets/images/backgrounds/japan_1.png",
+      stateTag: "default",
       choices: ["Begin journey", "Exit"],
     ),
-    // ... more steps or dynamic step generation
   ];
 
-  void handleInput(String value) {
+  void _handleInput(String value) async {
     setState(() {
-      userName = value;
+      isThinkingAnimated = true;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
       currentStep++;
+      isThinkingAnimated = false;
     });
   }
 
-  void handleChoice(String choice) {
+  void _handleChoice(String choice) async {
+    setState(() {
+      isThinkingAnimated = true;
+    });
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       if (choice == "Exit") {
-        // handle exit
+        currentStep = steps.length;
       } else {
         currentStep++;
       }
+      isThinkingAnimated = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Prevent going out of bounds!
-    if (currentStep >= steps.length) {
-      return Scaffold(
-        body: Center(
-          child: Text(
-            'The End!',
-            style: TextStyle(fontSize: 32, color: Colors.white),
-          ),
-        ),
-        backgroundColor: Colors.black,
-      );
-    }
-
+    final isEnd = currentStep >= steps.length;
     return Scaffold(
-      body: VisualNovelReader(
-        step: steps[currentStep],
-        onInput: handleInput,
-        onChoice: handleChoice,
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          // Main VN content
+          Positioned.fill(
+            child: isEnd
+                ? Center(
+                    child: Text(
+                      "The End!",
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                : VisualNovelReader(
+                    character: mainCharacter,
+                    step: steps[currentStep],
+                    isThinkingAnimated: isThinkingAnimated,
+                    onInput: _handleInput,
+                    onChoice: _handleChoice,
+                  ),
+          ),
+          // Overlay progress bar always on top
+          if (!isEnd)
+            OverlayProgressBar(
+              currentStep: currentStep,
+              totalSteps: steps.length,
+            ),
+        ],
       ),
     );
   }
