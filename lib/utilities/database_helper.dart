@@ -95,7 +95,6 @@ class MyCurriculumDatabaseHelper {
     db.execute('DROP TABLE my_curriculum_table');
   }
 }
-
 class TripDatabaseHelper {
   static final TripDatabaseHelper _instance = TripDatabaseHelper._internal();
 
@@ -167,7 +166,6 @@ class TripDatabaseHelper {
     return result;
   }
 }
-
 class UnitDatabaseHelper {
   static final UnitDatabaseHelper _instance = UnitDatabaseHelper._internal();
 
@@ -235,7 +233,6 @@ class UnitDatabaseHelper {
     return result;
   }
 }
-
 class LessonDatabaseHelper {
   static final LessonDatabaseHelper _instance =
       LessonDatabaseHelper._internal();

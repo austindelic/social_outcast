@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:culture_lessons/culture_lessons.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:social_outcast/data/trip_data.dart';
 
 class HackClubAIHelper {
   static const String apiUrl = 'https://ai.hackclub.com/chat/completions';
@@ -23,6 +25,83 @@ class HackClubAIHelper {
       throw Exception('Failed to load response');
     }
   }
+
+  Future<List<Puzzle>> generateOptionsQuestions(int unitId) async {
+    // Generate a prompt for the AI
+    // The prompt is a string that describes what you want the AI to do
+    // In this case, we want it to generate a JSON array of questions
+    final genre = UnitData.unitData[unitId]!.title;
+    final tripId = UnitData.unitData[unitId]!.tripId;
+    final fromCountry = TripData.tripData[tripId]!.fromCountry;
+    final toCountry = TripData.tripData[tripId]!.toCountry;
+
+    final prompt =
+        ''' "You are a friendly quizmaster AI. Generate a JSON array of 10 fun and educational multiple-choice questions about world cultures, traditions, or geography. Each question should be an object with the following fields: question (the question text), choices (an array of 4 possible answers), and answer (the correct answer, which must match one of the choices). Return only the JSON array, not a string or any extra commentary. Do not wrap the array in quotes or markdown. The output must be valid JSON and directly parsable. Example output:  [
+    {
+      "answer": "3",
+      "category": "Dining Etiquette",
+      "option1": "Leave a 15-20% cash tip on the table for the excellent service.",
+      "option2": "Find your server and hand them a cash tip directly to show your appreciation.",
+      "option3": "Do not leave a tip. Pay the exact amount on the bill at the front register.",
+      "option4": "Ask the manager if you can add a tip to your credit card payment.",
+      "question_sentence": "You've just finished a wonderful dinner at a restaurant in Kyoto and the service was impeccable. As an American used to tipping, what is the correct and respectful action to take?"
+    },
+    {
+      "answer": "2",
+      "category": "Dining Etiquette",
+      "option1": "Stick them standing upright into the remaining rice in your bowl.",
+      "option2": "Place them neatly together on the provided chopstick rest ('hashioki') or lay them across the top of your empty bowl.",
+      "option3": "Cross them over your plate to signal you are finished with your meal.",
+      "option4": "Use your chopsticks to point to the server to get their attention for the bill.",
+      "question_sentence": "You are taking a break during a meal and need to put your chopsticks down. What is the one action you should absolutely AVOID doing as it is a major cultural taboo related to funeral rites?"
+    },"
+
+Purpose: The User who lives in $fromCountry is traveling to $toCountry. The user wants to avoid being a bad manner and being an annoying tourist.
+Task: Generate a JSON list of 4-option 10 questions in a concrete situation=$genre ,4 options, and the answer.''';
+
+    // { \"question\": \"In India, what is the name of the festival of colors?\", \"choices\": [\"Diwali\", \"Holi\", \"Navratri\", \"Ganesh Chaturthi\"], \"answer\": \"Holi\" } ]"
+    final response = await getResponse(prompt);
+    print('Response: $response');
+    final List jsonResponse = jsonDecode(response);
+    final List<Puzzle> questions = [];
+    for (var question in jsonResponse) {
+      final questionSentence = question['question'];
+      final option1 = question['option1'];
+      final option2 = question['option2'];
+      final option3 = question['option3'];
+      final option4 = question['option4'];
+      final answer = int.parse(question['answer']);
+
+      questions.add(
+        Puzzle(
+          id: DateTime.now().millisecondsSinceEpoch,
+          unitId: unitId,
+          prompt: questionSentence,
+          type: PuzzleType.multipleChoice,
+          options: [option1, option2, option3, option4],
+          correctIndex: answer,
+        ),
+      );
+    }
+    return questions;
+  }
+
+  static Future<List<String>> generateLessons(
+    String genreListText,
+    String level,
+    String purpose,
+    String fromCountry,
+    String toCountry,
+  ) async {
+    final prompt =
+        '''
+      Pick 6 genres based on user's preference from the list: $genreListText \n Level: $level \n From: $fromCountry \n To: $toCountry \n purpose: $purpose. 
+      Make sure the response is a JSON array of strings, each representing a genre.
+      example: ["Transportation", "Dining Etiquette", "Accent", "Shopping Etiquette", "Laws and Rules", "Technology Use and Communication"]
+''';
+    final response = await getResponse(prompt);
+    return jsonDecode(response);
+  }
 }
 
 class GeminiHelper {
@@ -30,9 +109,13 @@ class GeminiHelper {
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
   static String apiKey = dotenv.env['GEMINI_API']!;
 
-  static Future<String> generateQuestions() async {
+  static Future<String> generateOptionsQuestions(
+    String fromCountry,
+    String toCountry,
+  ) async {
     final prompt =
-        '''Purpose: The American User is traveling to Japan. The user wants to avoid being a bad manner and being an annoying tourist.
+        ''' "You are a friendly quizmaster AI. Generate a JSON array of 10 fun and educational multiple-choice questions about world cultures, traditions, or geography. Each question should be an object with the following fields: question_sentence (the question text), category, choices (an array of 4 possible answers), and answer (the correct answer, which must match one of the choices). Return only the JSON array, not a string or any extra commentary. Do not wrap the array in quotes or markdown. The output must be valid JSON and directly parsable. Example output: [ { \"question\": \"Which Japanese festival is known for its fireworks displays?\", \"choices\": [\"Hanami\", \"Obon\", \"Tanabata\", \"Setsubun\"], \"answer\": \"Tanabata\" }, { \"question\": \"In India, what is the name of the festival of colors?\", \"choices\": [\"Diwali\", \"Holi\", \"Navratri\", \"Ganesh Chaturthi\"], \"answer\": \"Holi\" } ]"
+Purpose: The User who lives in $fromCountry is traveling to $toCountry. The user wants to avoid being a bad manner and being an annoying tourist.
 Task: Generate a JSON list of 4-option 6 questions in a concrete situation x all 10 situations, 4 options, and the answer.''';
     final response = await http.post(
       Uri.parse('$apiUrl?key=$apiKey'),
@@ -105,8 +188,16 @@ Task: Generate a JSON list of 4-option 6 questions in a concrete situation x all
     }
   }
 
-  static Future<String> generateLessons(String genreListText, String level, String purpose, String fromCountry, String toCountry) async {
-    final prompt = '''
+  static Future<String> generateLessons(
+    String genreListText,
+    String level,
+    String purpose,
+    String fromCountry,
+    String toCountry,
+  ) async {
+    final prompt =
+        '''
+
         Pick 6 genres based on user's preference from the list: $genreListText \n Level: $level \n From: $fromCountry \n To: $toCountry \n purpose: $purpose. 
 ''';
     final response = await http.post(
@@ -138,8 +229,7 @@ Task: Generate a JSON list of 4-option 6 questions in a concrete situation x all
   }
 }
 
-class GroqHelper
-{
+class GroqHelper {
   static String apiUrl =
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
   static String apiKey = dotenv.env['GEMINI_API']!;
