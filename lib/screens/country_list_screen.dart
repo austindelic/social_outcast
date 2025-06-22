@@ -13,28 +13,16 @@ class CountryListScreen extends ConsumerStatefulWidget {
 }
 
 class _CountryListScreenState extends ConsumerState<CountryListScreen> {
-  List? curriculums = [];
-  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchCurriculum();
     ref.read(preferenceProvider.notifier).loadPreferences();
-    
-  }
-
-  Future<void> _fetchCurriculum() async {
-    final data = await MyCurriculumDatabaseHelper().getAllData();
-    setState(() {
-      curriculums = data;
-      isLoading = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-     curriculums = ref.watch(preferenceProvider);
+     final curriculums = ref.watch(preferenceProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Country List')),
       floatingActionButton: FloatingActionButton(
@@ -43,32 +31,32 @@ class _CountryListScreenState extends ConsumerState<CountryListScreen> {
         },
         child: const Icon(Icons.add),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : (curriculums == null || curriculums!.isEmpty)
-          ? Center(child: Text('Add new curriculum'))
-          : ListView.builder(
-              itemCount: curriculums!.length,
-              itemBuilder: (context, index) {
-                var curriculum = curriculums![index];
-                return ListTile(
-                  title: Text(curriculum.toCountry),
-                  subtitle: Text(
-                    "${curriculum.fromCountry} - ${curriculum.purpose}",
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      MapScreen.routeName,
-                      arguments: {
-                        'index': index,
-                        'curriculum': curriculum,
+      body: (curriculums == null)
+          ? const Center(child: CircularProgressIndicator())
+          : (curriculums.isEmpty)
+              ? const Center(child: Text('Add new curriculum'))
+              : ListView.builder(
+                  itemCount: curriculums.length,
+                  itemBuilder: (context, index) {
+                    final curriculum = curriculums[index];
+                    return ListTile(
+                      title: Text(curriculum.toCountry),
+                      subtitle: Text(
+                        "${curriculum.fromCountry} - ${curriculum.purpose}",
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          MapScreen.routeName,
+                          arguments: {
+                            'index': index,
+                            'curriculum': curriculum,
+                          },
+                        );
                       },
                     );
                   },
-                );
-              },
-            ),
+                ),
     );
   }
 }
