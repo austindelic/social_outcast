@@ -68,7 +68,7 @@ class CountryFlag extends StatelessWidget {
 // ─── COUNTRY LIST SCREEN ────────────────────────────────────────────────────
 
 class CountryListScreen extends ConsumerStatefulWidget {
-  const CountryListScreen({Key? key}) : super(key: key);
+  const CountryListScreen({super.key});
 
   @override
   _CountryListScreenState createState() => _CountryListScreenState();

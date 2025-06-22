@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 
 import 'package:visual_novel/visual_novel.dart'; // Your custom VN logic
 import '../components/overlay_progress_bar.dart';
+import '../utilities/database_helper.dart';
 
 const countryNameToCode = {
   'Australia': 'au',
@@ -81,7 +81,7 @@ class _StoryScreenState extends State<StoryScreen> {
     {
       "role": "system",
       "content":
-          "You are a friendly quizmaster AI. Generate a JSON array of 10 fun and educational multiple-choice questions about world cultures, traditions, or geography. Each question should be an object with the following fields: question (the question text), choices (an array of 4 possible answers), and answer (the correct answer, which must match one of the choices). Return only the JSON array, not a string or any extra commentary. Do not wrap the array in quotes or markdown. The output must be valid JSON and directly parsable. Example output: [ { \"question\": \"Which Japanese festival is known for its fireworks displays?\", \"choices\": [\"Hanami\", \"Obon\", \"Tanabata\", \"Setsubun\"], \"answer\": \"Tanabata\" }, { \"question\": \"In India, what is the name of the festival of colors?\", \"choices\": [\"Diwali\", \"Holi\", \"Navratri\", \"Ganesh Chaturthi\"], \"answer\": \"Holi\" } ]"
+          "You are a friendly quizmaster AI. Generate a JSON array of 10 fun and educational multiple-choice questions about world cultures, traditions, or geography. Each question should be an object with the following fields: question (the question text), choices (an array of 3-5 possible answers), and answer (the correct answer, which must match one of the choices). Return only the JSON array, not a string or any extra commentary. Do not wrap the array in quotes or markdown. The output must be valid JSON and directly parsable. Example output: [ { \"question\": \"Which Japanese festival is known for its fireworks displays?\", \"choices\": [\"Hanami\", \"Obon\", \"Tanabata\", \"Setsubun\"], \"answer\": \"Tanabata\" }, { \"question\": \"In India, what is the name of the festival of colors?\", \"choices\": [\"Diwali\", \"Holi\", \"Navratri\", \"Ganesh Chaturthi\"], \"answer\": \"Holi\" } ]",
     },
     {
       "role": "assistant",
@@ -92,104 +92,384 @@ class _StoryScreenState extends State<StoryScreen> {
   List<VisualNovelStep> steps = [];
   int currentStep = 0;
   bool isThinkingAnimated = false;
-
   final mainCharacter = dawgSprite;
+  bool showHelp = false;
+  String? helpQuestion;
+  List<String> helpMessages = [];
+  Set<int> stepsWithTextInput = {};
+  TextEditingController tempInputController = TextEditingController();
+  TextEditingController helpChatController = TextEditingController();
+  String? feedbackMessage; // For wrong answer feedback
 
   @override
   void initState() {
     super.initState();
-    // Initialise the steps with the assistant's first reply
-    steps.add(
-      VisualNovelStep(
-        text: messages.last["content"]!,
-        backgroundAsset: "assets/images/backgrounds/japan_1.png",
-        stateTag: "default",
-        expectsInput: false,
-        choices: ["Alice", "Bob", "Charlie"], // Example choices
-        showChoicesInsteadOfInput: true, // Use the new feature
-      ),
-    );
+    _loadQuizFromDatabase();
   }
 
-  Future<void> fetchNextStep(String userContent) async {
-    setState(() => isThinkingAnimated = true);
+  @override
+  void dispose() {
+    tempInputController.dispose();
+    helpChatController.dispose();
+    super.dispose();
+  }
 
-    // Add user reply to messages
-    messages.add({"role": "user", "content": userContent});
-    final dio = Dio();
-    // Send conversation to ai.hackclub.com
-    final response = await dio.post(
-      'https://ai.hackclub.com/chat/completions',
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: {"messages": messages},
-    );
-    print(response);
-    // Parse assistant reply
-    String aiReply;
-    try {
-      aiReply = response.data["choices"][0]["message"]["content"];
-    } catch (_) {
-      aiReply = "Sorry, there was an error. Try again!";
+  Future<void> _loadQuizFromDatabase() async {
+    final puzzles = await PuzzleDatabaseHelper().getAllData();
+    if (puzzles != null && puzzles.isNotEmpty) {
+      setState(() {
+        steps = puzzles
+            .map(
+              (puzzle) => VisualNovelStep(
+                text: puzzle['prompt'] ?? '',
+                backgroundAsset: "assets/images/backgrounds/japan_1.png",
+                stateTag: "default",
+                expectsInput: false,
+                choices: [
+                  puzzle['option1']?.toString() ?? '',
+                  puzzle['option2']?.toString() ?? '',
+                  puzzle['option3']?.toString() ?? '',
+                  puzzle['option4']?.toString() ?? '',
+                ].where((c) => c.isNotEmpty).toList(),
+                showChoicesInsteadOfInput: true,
+                correctAnswer: puzzle['answer']?.toString() ?? '',
+              ),
+            )
+            .toList();
+      });
+    } else {
+      setState(() {
+        steps = [
+          VisualNovelStep(
+            text: "What is the capital of France?",
+            backgroundAsset: "assets/images/backgrounds/japan_1.png",
+            stateTag: "default",
+            expectsInput: false,
+            choices: ["Paris", "London", "Berlin", "Madrid"],
+            showChoicesInsteadOfInput: true,
+            correctAnswer: 'Paris',
+          ),
+          VisualNovelStep(
+            text: "Which country is known as the Land of the Rising Sun?",
+            backgroundAsset: "assets/images/backgrounds/japan_1.png",
+            stateTag: "default",
+            expectsInput: false,
+            choices: ["Japan", "China", "Korea", "Thailand"],
+            showChoicesInsteadOfInput: true,
+            correctAnswer: 'Japan', // Make sure this matches exactly
+          ),
+          VisualNovelStep(
+            text: "Which continent is Brazil located in?",
+            backgroundAsset: "assets/images/backgrounds/japan_1.png",
+            stateTag: "default",
+            expectsInput: false,
+            choices: ["South America", "Europe", "Asia", "Africa"],
+            showChoicesInsteadOfInput: true,
+            correctAnswer: 'South America',
+          ),
+        ];
+      });
     }
-
-    // Add assistant reply to messages
-    messages.add({"role": "assistant", "content": aiReply});
-
-    // Parse reply for choices (primitive example; use RegEx/AI parsing for more)
-    final choiceRegex = RegExp(r'\[(.*?)\]', multiLine: true);
-    final matches = choiceRegex.allMatches(aiReply);
-    List<String>? choices;
-    if (matches.isNotEmpty) {
-      choices = matches.map((m) => m.group(1) ?? '').toList();
-      aiReply = aiReply.replaceAll(choiceRegex, '').trim();
-    }
-
-    // Guess if input is expected (no choices = expects input)
-    bool expectsInput = choices == null || choices.isEmpty;
-
-    // Append next step
-    setState(() {
-      steps.add(
-        VisualNovelStep(
-          text: aiReply,
-          backgroundAsset: "assets/images/backgrounds/japan_1.png",
-          stateTag: "default",
-          expectsInput: expectsInput,
-          choices: choices,
-        ),
-      );
-      currentStep++;
-      isThinkingAnimated = false;
-    });
   }
 
   void _handleInput(String value) async {
-    await fetchNextStep(value);
+    // await fetchNextStep(value);
   }
 
   void _handleChoice(String choice) async {
-    await fetchNextStep(choice);
+    final correct = steps[currentStep].correctAnswer ?? '';
+    if (choice.trim() == correct.trim()) {
+      setState(() {
+        feedbackMessage = null;
+        stepsWithTextInput.remove(currentStep);
+        tempInputController.clear();
+        currentStep++;
+        showHelp = false;
+      });
+    } else {
+      setState(() {
+        feedbackMessage = 'Incorrect. Try again!';
+      });
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            feedbackMessage = null;
+          });
+        }
+      });
+    }
+  }
+
+  void _showHelp(String question) {
+    setState(() {
+      showHelp = true;
+      helpQuestion = question;
+      helpMessages = [
+        'You are now chatting with the bot about this question. Ask anything you need to understand!',
+      ];
+    });
+  }
+
+  void _sendHelpMessage(String message) async {
+    // Here you would call your AI backend. For now, just echo.
+    setState(() {
+      helpMessages.add('You: $message');
+      helpMessages.add('Bot: (AI response placeholder)');
+    });
+  }
+
+  void _closeHelp() {
+    setState(() {
+      showHelp = false;
+      helpQuestion = null;
+      helpMessages = [];
+    });
+  }
+
+  void _toggleTextInputForCurrentStep() {
+    setState(() {
+      if (stepsWithTextInput.contains(currentStep)) {
+        stepsWithTextInput.remove(currentStep);
+        tempInputController.clear();
+      } else {
+        stepsWithTextInput.add(currentStep);
+        tempInputController.text = '';
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
     final isEnd = false; // Never ends (infinite)
+
+    final showTextInput = stepsWithTextInput.contains(currentStep);
+    final currentStepObj = steps.isNotEmpty
+        ? steps[currentStep]
+        : VisualNovelStep(text: '', stateTag: 'default');
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Main VN content
-          Positioned.fill(
-            child: VisualNovelReader(
-              character: mainCharacter,
-              step: steps[currentStep],
-              isThinkingAnimated: isThinkingAnimated,
-              onInput: _handleInput,
-              onChoice: _handleChoice,
+          if (currentStep >= steps.length)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 80),
+                  SizedBox(height: 24),
+                  Text(
+                    'Quiz Complete!',
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Exit'),
+                  ),
+                ],
+              ),
+            )
+          else
+            Positioned.fill(
+              child: VisualNovelReader(
+                character: mainCharacter,
+                step: currentStepObj,
+                isThinkingAnimated: isThinkingAnimated,
+                onInput: _handleInput,
+                onChoice: _handleChoice,
+                // Pass help button builder
+                helpButtonBuilder: () => Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      showTextInput ? Icons.close : Icons.help_outline,
+                      color: Colors.blue,
+                    ),
+                    tooltip: showTextInput
+                        ? 'Return to multi-choice'
+                        : 'Need help with this question?',
+                    onPressed: _toggleTextInputForCurrentStep,
+                  ),
+                ),
+                // Add a builder for the choices/text input UI
+                customChoicesBuilder: showTextInput
+                    ? (context, step) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: tempInputController,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Type your answer or thoughts... (press Enter to submit)',
+                              ),
+                              onSubmitted: (val) {
+                                _handleInput(val);
+                                setState(() {
+                                  stepsWithTextInput.remove(currentStep);
+                                  tempInputController.clear();
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              icon: Icon(Icons.check),
+                              label: Text('Submit'),
+                              onPressed: () async {
+                                final val = tempInputController.text.trim();
+                                if (val.isNotEmpty) {
+                                  setState(() {
+                                    helpQuestion = 'Response:';
+                                    isThinkingAnimated = true;
+                                    showHelp = true;
+                                    helpMessages.add('You: $val');
+                                  });
+                                  await Future.delayed(
+                                    const Duration(seconds: 1),
+                                  );
+                                  setState(() {
+                                    helpMessages.add(
+                                      'Bot: (AI response placeholder)',
+                                    );
+                                    isThinkingAnimated = false;
+                                    tempInputController.clear();
+                                    stepsWithTextInput.remove(currentStep);
+                                  });
+                                  // Do NOT auto-close help overlay; user must press End
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    : null,
+              ),
             ),
-          ),
+          if (showHelp)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.7),
+                child: Center(
+                  child: Card(
+                    margin: const EdgeInsets.all(24),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Help for:',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            helpQuestion ?? '',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 200,
+                            child: ListView(
+                              children: helpMessages
+                                  .map(
+                                    (m) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                      ),
+                                      child: Text(m),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: helpChatController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Ask your question...',
+                                  ),
+                                  onSubmitted: (msg) {
+                                    if (msg.trim().isNotEmpty) {
+                                      _sendHelpMessage(msg.trim());
+                                      helpChatController.clear();
+                                    }
+                                  },
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: () {
+                                  final msg = helpChatController.text.trim();
+                                  if (msg.isNotEmpty) {
+                                    _sendHelpMessage(msg);
+                                    helpChatController.clear();
+                                  }
+                                },
+                                child: Text('Send'),
+                              ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                onPressed: _closeHelp,
+                                child: Text('End'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (feedbackMessage != null)
+            Positioned(
+              bottom: 120,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Card(
+                  color: Colors.red[100],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 24,
+                    ),
+                    child: Text(
+                      feedbackMessage!,
+                      style: TextStyle(color: Colors.red[900]),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           // Overlay progress bar always on top
           OverlayProgressBar(
             currentStep: currentStep,

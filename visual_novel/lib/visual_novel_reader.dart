@@ -40,6 +40,9 @@ class VisualNovelReader extends StatefulWidget {
   final bool isThinkingAnimated;
   final void Function(String input)? onInput;
   final void Function(String choice)? onChoice;
+  final Widget Function()? helpButtonBuilder; // Add help button builder
+  final Widget Function(BuildContext context, VisualNovelStep step)?
+      customChoicesBuilder; // Custom choices builder
 
   const VisualNovelReader({
     super.key,
@@ -48,8 +51,11 @@ class VisualNovelReader extends StatefulWidget {
     required this.isThinkingAnimated,
     this.onInput,
     this.onChoice,
+    this.helpButtonBuilder,
+    this.customChoicesBuilder,
   });
 
+  @override
   @override
   State<VisualNovelReader> createState() => _VisualNovelReaderState();
 }
@@ -207,11 +213,23 @@ class _VisualNovelReaderState extends State<VisualNovelReader>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  widget.step.text,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.step.text,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
+                    if (widget.helpButtonBuilder != null)
+                      widget.helpButtonBuilder!(),
+                  ],
                 ),
-                if (widget.step.customWidget != null) ...[
+                if (widget.customChoicesBuilder != null) ...[
+                  widget.customChoicesBuilder!(context, widget.step),
+                ] else if (widget.step.customWidget != null) ...[
                   const SizedBox(height: 10),
                   widget.step.customWidget!,
                 ] else if (widget.step.choices != null &&

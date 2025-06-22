@@ -28,17 +28,28 @@ class Puzzle {
       'id': id,
       'type': type.index,
       'prompt': prompt,
-      'options': options != null ? options!.join('|') : null,
+      'options': options?.join('|'),
       'correctIndex': correctIndex,
     };
   }
+
+  factory Puzzle.fromMap(Map<String, dynamic> map) {
+    return Puzzle(
+      id: map['id'],
+      type: PuzzleType.values[map['type']],
+      prompt: map['prompt'],
+      options:
+          map['options'] != null ? (map['options'] as String).split('|') : null,
+      correctIndex: map['correctIndex'],
+    );
+  }
 }
 
-// class Lesson {
-//   final int id;
-//   final int unitId; // FK to Unit
-//   final String subjectContext;
-//   final String title;
+class Lesson {
+  final int id;
+  final int unitId; // FK to Unit
+  final String subjectContext;
+  final String title;
 
 //   Lesson({
 //     required this.id,

@@ -10,7 +10,7 @@ enum DifficultyLevel { easy, medium, hard }
 
 class LessonPreferencesScreen extends ConsumerStatefulWidget {
   static const String routeName = '/lesson-preferences';
-  const LessonPreferencesScreen({Key? key}) : super(key: key);
+  const LessonPreferencesScreen({super.key});
 
   @override
   _LessonPreferencesScreenState createState() =>

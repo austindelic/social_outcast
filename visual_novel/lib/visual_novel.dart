@@ -27,6 +27,7 @@ class VisualNovelStep {
   final Widget? customWidget;
   final bool
       showChoicesInsteadOfInput; // NEW: allow forcing choices instead of input
+  final String? correctAnswer; // NEW: for quiz answer checking
 
   const VisualNovelStep({
     required this.text,
@@ -36,5 +37,6 @@ class VisualNovelStep {
     this.choices,
     this.customWidget,
     this.showChoicesInsteadOfInput = false, // NEW: default to false
+    this.correctAnswer, // NEW
   });
 }

@@ -1,5 +1,5 @@
 // culture_lessons.dart
 
-library culture_lessons;
+library;
 
 export 'src/models.dart';
