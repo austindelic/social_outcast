@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:game_levels_scrolling_map/game_levels_scrolling_map.dart';
 import 'package:game_levels_scrolling_map/model/point_model.dart';
 import 'package:level_map/level_map.dart';
 import 'package:social_outcast/utilities/database_helper.dart';

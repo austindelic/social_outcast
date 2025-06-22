@@ -127,7 +127,7 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
                         );
                       });
                     },
-                    child: const Text("travel beginner & first visit"),
+                    child: SizedBox(width: 250, child: const Text("travel beginner & first visit")),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -140,7 +140,7 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
                         );
                       });
                     },
-                    child: const Text("travel enthusiast & first visit"),
+                    child: SizedBox(width: 250, child: const Text("travel enthusiast & first visit")),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -153,7 +153,7 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
                         );
                       });
                     },
-                    child: const Text("travel lover & has visited before"),
+                    child: SizedBox(width: 250, child: const Text("travel lover & has visited before")),
                   ),
                 ],
               ),
@@ -176,7 +176,7 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
                         );
                       });
                     },
-                    child: const Text("Sightseeing"),
+                    child: SizedBox(width: 90, child: const Text("Sightseeing")),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -189,7 +189,7 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
                         );
                       });
                     },
-                    child: const Text("Business"),
+                    child: SizedBox(width: 90, child: const Text("Business")),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -202,7 +202,7 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
                         );
                       });
                     },
-                    child: const Text("Study"),
+                    child: SizedBox(width: 90, child: const Text("Study")),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -215,7 +215,7 @@ class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScree
                         );
                       });
                     },
-                    child: const Text("Visit People"),
+                    child: SizedBox(width: 90, child: const Text("Visit People")),
                   ),
                 ],
               ),
