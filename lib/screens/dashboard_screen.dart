@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:social_outcast/screens/lesson_menu_screen.dart';
+import 'package:social_outcast/screens/lesson_preferences_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +20,13 @@ class DashboardScreen extends StatelessWidget {
           const Text(
             'Welcome back!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, LessonMenuScreen.routeName);
+              Navigator.pushNamed(context, LessonPreferencesScreen.routeName);
+            },
+            child: const Text("Get Started"),
           ),
           const SizedBox(height: 16),
           DashboardCard(
@@ -61,7 +75,10 @@ class DashboardCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       child: ListTile(
         leading: Icon(icon, size: 36),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         trailing: Text(
           value,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
