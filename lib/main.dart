@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_outcast/screens/lesson_menu_screen.dart';
 import 'package:social_outcast/screens/lesson_preferences_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/account_screen.dart';
 import 'screens/dashboard_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() => runApp(const MyApp());
+Future<void> main() async{
+  runApp(
+    ProviderScope(
+      child: const MyApp(),
+    ),
+  );
+   await dotenv.load(fileName: ".env");
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
