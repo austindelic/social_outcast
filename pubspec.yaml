@@ -44,9 +44,10 @@ dependencies:
   sqflite: ^2.4.2
   flutter_riverpod: ^2.6.1
   shared_preferences: ^2.5.3
-  sqflite: ^2.4.2
   http: ^1.4.0
   flutter_dotenv: ^5.2.1
+  game_levels_scrolling_map: ^0.0.7
+  level_map: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -74,19 +75,21 @@ flutter:
 
     - assets/images/sprites/otter/otter_default.png
     - assets/images/sprites/otter/otter_thinking_1.png
+    - assets/images/backgrounds/map_background.png
+    - assets/images/backgrounds/deactivated_stage.png
+    - assets/images/backgrounds/activated_stage.png
     - assets/images/sprites/otter/otter_thinking_2.png
     - assets/images/sprites/otter/otter_thinking_3.png
 
     - assets/images/sprites/dawg/dawg_default.png
     - assets/images/sprites/dawg/dawg_thinking_1.png
+    - assets/images/backgrounds/pngegg.png
     - assets/images/sprites/dawg/dawg_thinking_2.png
     - assets/images/sprites/dawg/dawg_thinking_3.png
 
     - assets/images/sprites/platypus/platypus_default.png
 
-  # To add assets to your application, add an assets section, like this:
-  assets:
-    -  .env
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
