@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'screens/chat_screen.dart';
 import 'screens/account_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/story_screen.dart';
@@ -28,7 +27,7 @@ class _MainTabsState extends State<MainTabs> {
 
   final List<Widget> _pages = [
     DashboardScreen(),
-    ChatScreen(),
+    StoryScreen(),
     AccountScreen(),
   ];
 
