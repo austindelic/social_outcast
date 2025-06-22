@@ -1,45 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const Text(
-            'Welcome back!',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          DashboardCard(
-            title: "Total Chats",
-            value: "132",
-            icon: Icons.chat_bubble_outline,
-            color: Colors.blue[100],
-          ),
-          DashboardCard(
-            title: "Active Users",
-            value: "7",
-            icon: Icons.people_outline,
-            color: Colors.green[100],
-          ),
-          DashboardCard(
-            title: "Last Message",
-            value: "Just now",
-            icon: Icons.access_time,
-            color: Colors.orange[100],
-          ),
-          // Add more cards as needed
-        ],
-      ),
-    );
-  }
-}
-
+// MOVE THIS UP
 class DashboardCard extends StatelessWidget {
   final String title;
   final String value;
@@ -70,3 +31,59 @@ class DashboardCard extends StatelessWidget {
     );
   }
 }
+
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Dashboard')),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/example.png',
+              fit: BoxFit.cover,
+              color: Colors.black.withValues(
+                alpha: 0.1,
+              ), // Optional: faint overlay
+              colorBlendMode: BlendMode.darken,
+            ),
+          ),
+          ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              const Text(
+                'Welcome back!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              DashboardCard(
+                title: "Total Chats",
+                value: "132",
+                icon: Icons.chat_bubble_outline,
+                color: Colors.blue[100],
+              ),
+              DashboardCard(
+                title: "Active Users",
+                value: "7",
+                icon: Icons.people_outline,
+                color: Colors.green[100],
+              ),
+              DashboardCard(
+                title: "Last Message",
+                value: "Just now",
+                icon: Icons.access_time,
+                color: Colors.orange[100],
+              ),
+              // Add more cards as needed
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ...DashboardCard code unchanged

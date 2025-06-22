@@ -1,71 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:visual_novel/visual_novel.dart';
+import 'package:visual_novel/visual_novel_step.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
-
+class StoryScreen extends StatefulWidget {
+  const StoryScreen({super.key});
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const Text(
-            'Welcome back!',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          DashboardCard(
-            title: "Total Chats",
-            value: "132",
-            icon: Icons.chat_bubble_outline,
-            color: Colors.blue[100],
-          ),
-          DashboardCard(
-            title: "Active Users",
-            value: "7",
-            icon: Icons.people_outline,
-            color: Colors.green[100],
-          ),
-          DashboardCard(
-            title: "Last Message",
-            value: "Just now",
-            icon: Icons.access_time,
-            color: Colors.orange[100],
-          ),
-          // Add more cards as needed
-        ],
-      ),
-    );
-  }
+  State<StoryScreen> createState() => _StoryScreenState();
 }
 
-class DashboardCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color? color;
+class _StoryScreenState extends State<StoryScreen> {
+  int currentStep = 0;
+  String? userName;
 
-  const DashboardCard({
-    super.key,
-    required this.title,
-    required this.value,
-    required this.icon,
-    this.color,
-  });
+  late final List<VisualNovelStep> steps = [
+    VisualNovelStep(
+      text: "Welcome! What is your name?",
+      backgroundAsset: "assets/images/backgrounds/example.png",
+      characterAsset: "assets/images/sprites/example.png",
+      expectsInput: true,
+    ),
+    VisualNovelStep(
+      text: "Nice to meet you!",
+      backgroundAsset: "assets/images/backgrounds/example.png",
+      characterAsset: "assets/images/sprites/example.png",
+      choices: ["Begin journey", "Exit"],
+    ),
+    // ... more steps or dynamic step generation
+  ];
+
+  void handleInput(String value) {
+    setState(() {
+      userName = value;
+      currentStep++;
+    });
+  }
+
+  void handleChoice(String choice) {
+    setState(() {
+      if (choice == "Exit") {
+        // handle exit
+      } else {
+        currentStep++;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: color ?? Colors.grey[100],
-      margin: const EdgeInsets.only(bottom: 16),
-      child: ListTile(
-        leading: Icon(icon, size: 36),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        trailing: Text(
-          value,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    // Prevent going out of bounds!
+    if (currentStep >= steps.length) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            'The End!',
+            style: TextStyle(fontSize: 32, color: Colors.white),
+          ),
         ),
+        backgroundColor: Colors.black,
+      );
+    }
+
+    return Scaffold(
+      body: VisualNovelReader(
+        step: steps[currentStep],
+        onInput: handleInput,
+        onChoice: handleChoice,
       ),
     );
   }

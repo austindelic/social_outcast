@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'screens/chat_screen.dart';
 import 'screens/account_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/story_screen.dart';
+import 'screens/map.dart';
+import 'screens/puzzle_runner_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:culture_lessons/culture_lessons.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -28,8 +32,10 @@ class _MainTabsState extends State<MainTabs> {
 
   final List<Widget> _pages = [
     DashboardScreen(),
-    ChatScreen(),
+    MapScreen(),
+    StoryScreen(),
     AccountScreen(),
+    PuzzleRunnerScreen(),
   ];
 
   void _onItemTapped(int idx) {
@@ -43,13 +49,27 @@ class _MainTabsState extends State<MainTabs> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        backgroundColor: Colors.black.withValues(
+          alpha: 0.1,
+          red: 0.0,
+          green: 0.0,
+          blue: 0.0,
+        ),
+        selectedItemColor: Colors.amber,
+        unselectedItemColor: Colors.grey, // Icon colour
+        selectedLabelStyle: const TextStyle(color: Colors.amber),
+        unselectedLabelStyle: const TextStyle(
+          color: Colors.grey,
+        ), // <-- Add this line
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Lessons'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
+          BottomNavigationBarItem(icon: Icon(Icons.extension), label: 'Puzzles'),
         ],
       ),
     );
