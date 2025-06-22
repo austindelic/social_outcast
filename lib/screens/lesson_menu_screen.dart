@@ -52,17 +52,19 @@ class _LessonMenuScreenState extends ConsumerState<LessonMenuScreen> {
   }
 
   Future<void> generateLessons() async {
+    final routeArgs = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    int index = routeArgs!['index'];
     print('Generating lessons...');
     final genres = '''
   Transportation, Hotel Behavior, Dining Etiquette, Greetings and Introductions, Slang, Accent, Shopping Etiquette,Laws and Rules, Technology Use and Communication, Cultural Sensitivities,
 ''';
-    final selectedGenre = ref.read(preferenceProvider).purpose;
-    final selectedFromCountry = ref.read(preferenceProvider).fromCountry;
-    final selectedToCountry = ref.read(preferenceProvider).toCountry;
-    final selectedLevel = ref.read(preferenceProvider).level;
+    final selectedGenre = ref.read(preferenceProvider)[index].purpose;
+    final selectedFromCountry = ref.read(preferenceProvider)[index].fromCountry;
+    final selectedToCountry = ref.read(preferenceProvider)[index].toCountry;
+    final selectedLevel = ref.read(preferenceProvider)[index].level;
     final lessonResponce = await GeminiHelper.generateLessons(
       genres,
-      selectedLevel,
+      selectedLevel?? '',
       selectedGenre,
       selectedFromCountry,
       selectedToCountry,

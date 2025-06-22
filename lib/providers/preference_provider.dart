@@ -1,72 +1,58 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_outcast/utilities/database_helper.dart';
+
 class Preference {
-  final String name;
-  final String level;
   final String purpose;
   final String fromCountry;
   final String toCountry;
+  final String? level;
+
 
   Preference copyWith({
-    String? name,
-    String? level,
     String? purpose,
     String? fromCountry,
     String? toCountry,
+    String? level,
   }) {
     return Preference(
-      name: name ?? this.name,
-      level: level ?? this.level,
       purpose: purpose ?? this.purpose,
       fromCountry: fromCountry ?? this.fromCountry,
       toCountry: toCountry ?? this.toCountry,
+      level: level ?? this.level,
     );
   }
 
   Preference({
-    required this.name,
-    required this.level,
     required this.purpose,
     required this.fromCountry,
     required this.toCountry,
+    this.level,
   });
 }
 
-class PreferenceProvider extends Notifier<Preference> {
+class PreferenceProvider extends Notifier<List<Preference>> {
   @override
-  Preference build() {
-    return Preference(
-      name: '',
-      level: '',
-      purpose: '',
-      fromCountry: '',
-      toCountry: '',
-    );
+  List<Preference> build() {
+    return [];
   }
 
   void setPreference(Preference preference) {
-    state = preference;
+    state = [...state, preference];
   }
 
-  void setName(String name) {
-    state = state.copyWith(name: name);
-  }
-
-  void setLevel(String level) {
-    state = state.copyWith(level: level);
-  }
-
-  void setPurpose(String purpose) {
-    state = state.copyWith(purpose: purpose);
-  }
-
-  void setFromCountry(String fromCountry) {
-    state = state.copyWith(fromCountry: fromCountry);
-  }
-
-  void setToCountry(String toCountry) {
-    state = state.copyWith(toCountry: toCountry);
+  Future<void> loadPreferences() async {
+    final database = await MyCurriculumDatabaseHelper().getAllData();
+    state = database!.map((data) {
+      return Preference(
+        purpose: data['purpose'],
+        fromCountry: data['fromCountry'],
+        toCountry: data['toCountry'],
+      );
+    }).toList();
   }
 }
 
 final preferenceProvider =
-    NotifierProvider<PreferenceProvider, Preference>(PreferenceProvider.new);
+    NotifierProvider<PreferenceProvider, List<Preference>>(
+      PreferenceProvider.new,
+    );

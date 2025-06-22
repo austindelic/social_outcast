@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_outcast/screens/country_list_screen.dart';
 import 'package:social_outcast/screens/lesson_menu_screen.dart';
 import 'package:social_outcast/screens/lesson_preferences_screen.dart';
-import 'screens/chat_screen.dart';
 import 'screens/account_screen.dart';
 import 'screens/dashboard_screen.dart';
+import 'screens/map.dart';
+import 'screens/story_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async{
@@ -26,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         LessonPreferencesScreen.routeName: (context) => const LessonPreferencesScreen(),
         LessonMenuScreen.routeName: (context) => const LessonMenuScreen(),
+        MapScreen.routeName: (context) => const MapScreen(),
       }
     );
   }
@@ -42,7 +45,7 @@ class _MainTabsState extends State<MainTabs> {
 
   final List<Widget> _pages = [
     DashboardScreen(),
-    MapScreen(),
+    CountryListScreen(),
     StoryScreen(),
     AccountScreen(),
   ];
@@ -78,6 +81,7 @@ class _MainTabsState extends State<MainTabs> {
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Lessons'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
+
         ],
       ),
     );
