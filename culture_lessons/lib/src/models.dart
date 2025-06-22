@@ -24,7 +24,7 @@ class Puzzle {
       'id': id,
       'type': type.index,
       'prompt': prompt,
-      'options': options != null ? options!.join('|') : null,
+      'options': options?.join('|'),
       'correctIndex': correctIndex,
     };
   }
@@ -34,7 +34,8 @@ class Puzzle {
       id: map['id'],
       type: PuzzleType.values[map['type']],
       prompt: map['prompt'],
-      options: map['options'] != null ? (map['options'] as String).split('|') : null,
+      options:
+          map['options'] != null ? (map['options'] as String).split('|') : null,
       correctIndex: map['correctIndex'],
     );
   }

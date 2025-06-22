@@ -86,6 +86,7 @@ class _StoryScreenState extends State<StoryScreen> {
   List<String> helpMessages = [];
   Set<int> stepsWithTextInput = {};
   TextEditingController tempInputController = TextEditingController();
+  TextEditingController helpChatController = TextEditingController();
   String? feedbackMessage; // For wrong answer feedback
 
   @override
@@ -97,6 +98,7 @@ class _StoryScreenState extends State<StoryScreen> {
   @override
   void dispose() {
     tempInputController.dispose();
+    helpChatController.dispose();
     super.dispose();
   }
 
@@ -142,7 +144,16 @@ class _StoryScreenState extends State<StoryScreen> {
             expectsInput: false,
             choices: ["Japan", "China", "Korea", "Thailand"],
             showChoicesInsteadOfInput: true,
-            correctAnswer: 'Japan',
+            correctAnswer: 'Japan', // Make sure this matches exactly
+          ),
+          VisualNovelStep(
+            text: "Which continent is Brazil located in?",
+            backgroundAsset: "assets/images/backgrounds/japan_1.png",
+            stateTag: "default",
+            expectsInput: false,
+            choices: ["South America", "Europe", "Asia", "Africa"],
+            showChoicesInsteadOfInput: true,
+            correctAnswer: 'South America',
           ),
         ];
       });
@@ -155,18 +166,24 @@ class _StoryScreenState extends State<StoryScreen> {
 
   void _handleChoice(String choice) async {
     final correct = steps[currentStep].correctAnswer ?? '';
-    if (choice == correct) {
+    if (choice.trim() == correct.trim()) {
       setState(() {
         feedbackMessage = null;
         stepsWithTextInput.remove(currentStep);
         tempInputController.clear();
-        if (currentStep < steps.length - 1) {
-          currentStep++;
-        }
+        currentStep++;
+        showHelp = false;
       });
     } else {
       setState(() {
         feedbackMessage = 'Incorrect. Try again!';
+      });
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            feedbackMessage = null;
+          });
+        }
       });
     }
   }
@@ -222,60 +239,108 @@ class _StoryScreenState extends State<StoryScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Main VN content
-          Positioned.fill(
-            child: VisualNovelReader(
-              character: mainCharacter,
-              step: currentStepObj,
-              isThinkingAnimated: isThinkingAnimated,
-              onInput: _handleInput,
-              onChoice: _handleChoice,
-              // Pass help button builder
-              helpButtonBuilder: () => IconButton(
-                icon: Icon(
-                  showTextInput ? Icons.close : Icons.help_outline,
-                  color: Colors.blue,
-                ),
-                tooltip: showTextInput
-                    ? 'Return to multi-choice'
-                    : 'Need help with this question?',
-                onPressed: _toggleTextInputForCurrentStep,
+          if (currentStep >= steps.length)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 80),
+                  SizedBox(height: 24),
+                  Text(
+                    'Quiz Complete!',
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Exit'),
+                  ),
+                ],
               ),
-              // Add a builder for the choices/text input UI
-              customChoicesBuilder: showTextInput
-                  ? (context, step) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        children: [
-                          TextField(
-                            controller: tempInputController,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              hintText:
-                                  'Type your answer or thoughts... (press Enter to submit)',
-                            ),
-                            onSubmitted: (val) {
-                              // Optionally handle input submission
-                              _handleInput(val);
-                              // Optionally auto-close text input after submit:
-                              setState(() {
-                                stepsWithTextInput.remove(currentStep);
-                                tempInputController.clear();
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          ElevatedButton.icon(
-                            icon: Icon(Icons.arrow_back),
-                            label: Text('Back to choices'),
-                            onPressed: _toggleTextInputForCurrentStep,
-                          ),
-                        ],
+            )
+          else
+            Positioned.fill(
+              child: VisualNovelReader(
+                character: mainCharacter,
+                step: currentStepObj,
+                isThinkingAnimated: isThinkingAnimated,
+                onInput: _handleInput,
+                onChoice: _handleChoice,
+                // Pass help button builder
+                helpButtonBuilder: () => Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
                       ),
-                    )
-                  : null,
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      showTextInput ? Icons.close : Icons.help_outline,
+                      color: Colors.blue,
+                    ),
+                    tooltip: showTextInput
+                        ? 'Return to multi-choice'
+                        : 'Need help with this question?',
+                    onPressed: _toggleTextInputForCurrentStep,
+                  ),
+                ),
+                // Add a builder for the choices/text input UI
+                customChoicesBuilder: showTextInput
+                    ? (context, step) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: tempInputController,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Type your answer or thoughts... (press Enter to submit)',
+                              ),
+                              onSubmitted: (val) {
+                                _handleInput(val);
+                                setState(() {
+                                  stepsWithTextInput.remove(currentStep);
+                                  tempInputController.clear();
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              icon: Icon(Icons.check),
+                              label: Text('Submit'),
+                              onPressed: () async {
+                                final val = tempInputController.text.trim();
+                                if (val.isNotEmpty) {
+                                  setState(() {
+                                    helpQuestion = 'Response:';
+                                    isThinkingAnimated = true;
+                                    showHelp = true;
+                                    helpMessages.add('You: $val');
+                                  });
+                                  await Future.delayed(const Duration(seconds: 1));
+                                  setState(() {
+                                    helpMessages.add('Bot: (AI response placeholder)');
+                                    isThinkingAnimated = false;
+                                    tempInputController.clear();
+                                    stepsWithTextInput.remove(currentStep);
+                                  });
+                                  // Do NOT auto-close help overlay; user must press End
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    : null,
+              ),
             ),
-          ),
           if (showHelp)
             Positioned.fill(
               child: Container(
@@ -316,15 +381,48 @@ class _StoryScreenState extends State<StoryScreen> {
                             children: [
                               Expanded(
                                 child: TextField(
-                                  onSubmitted: (msg) => _sendHelpMessage(msg),
+                                  controller: helpChatController,
                                   decoration: InputDecoration(
                                     hintText: 'Ask your question...',
                                   ),
+                                  onSubmitted: (msg) {
+                                    if (msg.trim().isNotEmpty) {
+                                      _sendHelpMessage(msg.trim());
+                                      helpChatController.clear();
+                                    }
+                                  },
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(Icons.close),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: () {
+                                  final msg = helpChatController.text.trim();
+                                  if (msg.isNotEmpty) {
+                                    _sendHelpMessage(msg);
+                                    helpChatController.clear();
+                                  }
+                                },
+                                child: Text('Send'),
+                              ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                    vertical: 12,
+                                  ),
+                                ),
                                 onPressed: _closeHelp,
+                                child: Text('End'),
                               ),
                             ],
                           ),
