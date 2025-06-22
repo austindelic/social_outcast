@@ -103,7 +103,7 @@ class _StoryScreenState extends State<StoryScreen> {
   }
 
   Future<void> _loadQuizFromDatabase() async {
-    final puzzles = await PuzzleDatabaseHelper().getAllData();
+    final puzzles = await MyCurriculumDatabaseHelper().getAllData();
     if (puzzles != null && puzzles.isNotEmpty) {
       setState(() {
         steps = puzzles
