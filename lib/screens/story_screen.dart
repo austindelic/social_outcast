@@ -4,6 +4,21 @@ import 'package:dio/dio.dart';
 import 'package:visual_novel/visual_novel.dart'; // Your custom VN logic
 import '../components/overlay_progress_bar.dart';
 
+const countryNameToCode = {
+  'Australia': 'au',
+  'France': 'fr',
+  'Japan': 'jp',
+  'Brazil': 'br',
+  'United States': 'us',
+  'India': 'in',
+  // ...add more as needed
+};
+
+String getCountryCode(String? countryName) {
+  if (countryName == null) return 'xx';
+  return countryNameToCode[countryName] ?? 'xx';
+}
+
 final dawgSprite = Character(
   states: {
     "default": CharacterSpriteState(
@@ -74,7 +89,7 @@ class _StoryScreenState extends State<StoryScreen> {
   int currentStep = 0;
   bool isThinkingAnimated = false;
 
-  final mainCharacter = platypusSprite;
+  final mainCharacter = dawgSprite;
 
   @override
   void initState() {
