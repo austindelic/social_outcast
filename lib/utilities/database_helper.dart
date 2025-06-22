@@ -19,17 +19,18 @@ class MyCurriculumDatabaseHelper {
   }
 
   Future<Database?> initMyLocationDatabase() async {
-    String path = join(await getDatabasesPath(), "my_preferences_database.db");
+    String path = join(await getDatabasesPath(), "preferences_database.db");
     var db = await openDatabase(
       path,
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute('''
-          CREATE TABLE curriculum_table(
+          CREATE TABLE curricular_table(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             fromCountry TEXT,
             toCountry TEXT,
-            purpose TEXT
+            purpose TEXT,
+            unitId INTEGER
           )
         ''');
       },
@@ -42,9 +43,14 @@ class MyCurriculumDatabaseHelper {
     String fromCountry,
     String toCountry,
     String purpose,
+    int unitId,
   ) async {
     final Database? db = await database;
-    final prevData = await getAllData();
+    var prevData = null;
+    if(await curricularTableExists()) {
+       prevData = await getAllData();
+    }
+    
     int index = prevData?.length ?? 0;
 
     Map<String, dynamic> data = {
@@ -52,10 +58,11 @@ class MyCurriculumDatabaseHelper {
       'fromCountry': fromCountry,
       'toCountry': toCountry,
       'purpose': purpose,
+      'unitId': unitId,
     };
 
     await db!.insert(
-      'my_curriculum_table',
+      'curricular_table',
       data,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -64,7 +71,7 @@ class MyCurriculumDatabaseHelper {
   Future<Map<String, dynamic>?> getData(int id) async {
     final Database? db = await database;
     List<Map<String, dynamic>> maps = await db!.query(
-      'curriculum_table',
+      'curricular_table',
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -74,16 +81,23 @@ class MyCurriculumDatabaseHelper {
     return null;
   }
 
+  Future<bool> curricularTableExists() async {
+    final Database? db = await database;
+    final result = await db!.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='curricular_table'");
+    return result.isNotEmpty;
+  }
+
   Future<List<Map<String, dynamic>>?> getAllData() async {
     final Database? db = await database;
-    final result = await db!.query('my_curriculum_table');
+    final result = await db!.query('curricular_table');
     return result;
   }
 
   Future<int> deleteData(String fromCountry, String purpose) async {
     final Database? db = await database;
     return await db!.delete(
-      'my_curriculum_table',
+      'curricular_table',
       where: 'fromCountry = ? AND purpose = ?',
       whereArgs: [fromCountry, purpose],
     );
@@ -91,8 +105,8 @@ class MyCurriculumDatabaseHelper {
 
   Future<void> deleteAllData() async {
     final Database? db = await database;
-    db!.delete('my_curriculum_table');
-    db.execute('DROP TABLE my_curriculum_table');
+    db!.delete('curricular_table');
+    db.execute('DROP TABLE curricular_table');
   }
 }
 class TripDatabaseHelper {
@@ -192,7 +206,7 @@ class UnitDatabaseHelper {
           CREATE TABLE unit_table(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tripId INTEGER,
-            genre TEXT,
+            genre TEXT
           )
         ''');
       },

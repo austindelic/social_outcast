@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_outcast/data/trip_data.dart';
 import 'package:social_outcast/providers/preference_provider.dart';
 import 'package:social_outcast/utilities/database_helper.dart';
+import 'package:social_outcast/utilities/llm_helper.dart';
 import 'package:social_outcast/utilities/prefs_helper.dart';
 
 enum DifficultyLevel { easy, medium, hard }
@@ -31,7 +33,7 @@ class _LessonPreferencesScreenState
   final _purposes = ['Sightseeing', 'Business', 'Study', 'Visit People'];
   final _countries = ['USA', 'UK', 'Australia', 'China', 'Singapore', 'Japan'];
 
-  void _submitPreferences() {
+  Future<void> _submitPreferences() async {
     if (_name.isEmpty ||
         _difficulty == null ||
         _purpose == null ||
@@ -57,13 +59,61 @@ class _LessonPreferencesScreenState
           ),
         );
     UserPreferences.setName(_name);
-    MyCurriculumDatabaseHelper().insertData(
-      _name,
+      final Map<String, String> questionTypeMap = {
+      'Transportation': 'fourOption',
+      'Hotel Behavior': 'fourOption',
+      'Accent': 'speech',
+      'Shopping Etiquette': 'fourOption',
+      'Laws and Rules': 'fourOption',
+      'Business Situation': 'text',
+      'Home Stay': 'text',
+      'Basic Language': 'speech',
+      'Behavior on Street': 'fourOption',
+      'Dining Etiquette': 'fourOption',
+      'Technology Use and Communication': 'text',
+      'Cultural Sensitivities': 'fourOption',
+      'Greetings and Introductions': 'speech',
+      'Slang': 'speech',
+    };
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Container(
+          color: Colors.black54,
+          child: const Center(child: CircularProgressIndicator()),
+        );
+      },
+    );
+    final LessonsList = await OpenAIHelper.generateLessons(
+      _difficulty!.name,
+      _purpose!,
       _fromCountry!,
       _toCountry!,
-      _purpose!,
     );
-
+    for (var lesson in LessonsList) {
+      final lessonType = questionTypeMap[lesson];
+      if (lessonType != null) {
+        var lessons = await OpenAIHelper.generateLessons(
+          lesson,
+          lessonType,
+          _fromCountry!,
+          _toCountry!,
+        );
+        final unitId = UnitData.getUnitId(_fromCountry!, _toCountry!, lesson);
+        for (var lesson in lessons) {
+          MyCurriculumDatabaseHelper().insertData(
+            _name,
+            _fromCountry!,
+            _toCountry!,
+            lesson,
+            unitId,
+          );
+        }
+      }
+    }
+    // Disable the progress dialog by immediately closing it.
+    Navigator.of(context, rootNavigator: true).pop();
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Preferences saved!')));

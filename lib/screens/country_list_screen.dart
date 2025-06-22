@@ -79,6 +79,7 @@ class _CountryListScreenState extends ConsumerState<CountryListScreen> {
   void initState() {
     super.initState();
     ref.read(preferenceProvider.notifier).loadPreferences();
+    
   }
 
   @override
