@@ -41,26 +41,16 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Dashboard')),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/example.png',
-              fit: BoxFit.cover,
-              color: Colors.black.withValues(
-                alpha: 0.1,
-              ), // Optional: faint overlay
-              colorBlendMode: BlendMode.darken,
-            ),
-          ),
           ListView(
             padding: const EdgeInsets.all(16),
             children: [
               const Text(
-                'Welcome back!',
+                'Welcome back! Choose a new language or select a current one',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               DashboardCard(
-                title: "Total Chats",
+                title: "Chinese",
                 value: "132",
                 icon: Icons.chat_bubble_outline,
                 color: Colors.blue[100],

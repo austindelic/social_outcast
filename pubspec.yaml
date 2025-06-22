@@ -64,9 +64,20 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/backgrounds/example.png
-    - assets/images/sprites/example.png
-    - assets/example.png
+    - assets/images/backgrounds/japan_1.png
+
+    - assets/images/sprites/otter/otter_default.png
+    - assets/images/sprites/otter/otter_thinking_1.png
+    - assets/images/sprites/otter/otter_thinking_2.png
+    - assets/images/sprites/otter/otter_thinking_3.png
+
+    - assets/images/sprites/dawg/dawg_default.png
+    - assets/images/sprites/dawg/dawg_thinking_1.png
+    - assets/images/sprites/dawg/dawg_thinking_2.png
+    - assets/images/sprites/dawg/dawg_thinking_3.png
+
+    - assets/images/sprites/platypus/platypus_default.png
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
