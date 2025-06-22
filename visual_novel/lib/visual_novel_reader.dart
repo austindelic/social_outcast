@@ -41,6 +41,8 @@ class VisualNovelReader extends StatefulWidget {
   final void Function(String input)? onInput;
   final void Function(String choice)? onChoice;
   final Widget Function()? helpButtonBuilder; // Add help button builder
+  final Widget Function(BuildContext context, VisualNovelStep step)?
+      customChoicesBuilder; // Custom choices builder
 
   const VisualNovelReader({
     super.key,
@@ -50,6 +52,7 @@ class VisualNovelReader extends StatefulWidget {
     this.onInput,
     this.onChoice,
     this.helpButtonBuilder,
+    this.customChoicesBuilder,
   });
 
   @override
@@ -224,7 +227,9 @@ class _VisualNovelReaderState extends State<VisualNovelReader>
                       widget.helpButtonBuilder!(),
                   ],
                 ),
-                if (widget.step.customWidget != null) ...[
+                if (widget.customChoicesBuilder != null) ...[
+                  widget.customChoicesBuilder!(context, widget.step),
+                ] else if (widget.step.customWidget != null) ...[
                   const SizedBox(height: 10),
                   widget.step.customWidget!,
                 ] else if (widget.step.choices != null &&

@@ -80,17 +80,24 @@ class _StoryScreenState extends State<StoryScreen> {
   List<VisualNovelStep> steps = [];
   int currentStep = 0;
   bool isThinkingAnimated = false;
-
   final mainCharacter = dawgSprite;
-
   bool showHelp = false;
   String? helpQuestion;
   List<String> helpMessages = [];
+  Set<int> stepsWithTextInput = {};
+  TextEditingController tempInputController = TextEditingController();
+  String? feedbackMessage; // For wrong answer feedback
 
   @override
   void initState() {
     super.initState();
     _loadQuizFromDatabase();
+  }
+
+  @override
+  void dispose() {
+    tempInputController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadQuizFromDatabase() async {
@@ -111,6 +118,7 @@ class _StoryScreenState extends State<StoryScreen> {
                   puzzle['option4']?.toString() ?? '',
                 ].where((c) => c.isNotEmpty).toList(),
                 showChoicesInsteadOfInput: true,
+                correctAnswer: puzzle['answer']?.toString() ?? '',
               ),
             )
             .toList();
@@ -119,12 +127,22 @@ class _StoryScreenState extends State<StoryScreen> {
       setState(() {
         steps = [
           VisualNovelStep(
-            text: "No quiz data found in database.",
+            text: "What is the capital of France?",
             backgroundAsset: "assets/images/backgrounds/japan_1.png",
             stateTag: "default",
             expectsInput: false,
-            choices: [],
-            showChoicesInsteadOfInput: false,
+            choices: ["Paris", "London", "Berlin", "Madrid"],
+            showChoicesInsteadOfInput: true,
+            correctAnswer: 'Paris',
+          ),
+          VisualNovelStep(
+            text: "Which country is known as the Land of the Rising Sun?",
+            backgroundAsset: "assets/images/backgrounds/japan_1.png",
+            stateTag: "default",
+            expectsInput: false,
+            choices: ["Japan", "China", "Korea", "Thailand"],
+            showChoicesInsteadOfInput: true,
+            correctAnswer: 'Japan',
           ),
         ];
       });
@@ -136,7 +154,21 @@ class _StoryScreenState extends State<StoryScreen> {
   }
 
   void _handleChoice(String choice) async {
-    // await fetchNextStep(choice);
+    final correct = steps[currentStep].correctAnswer ?? '';
+    if (choice == correct) {
+      setState(() {
+        feedbackMessage = null;
+        stepsWithTextInput.remove(currentStep);
+        tempInputController.clear();
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+        }
+      });
+    } else {
+      setState(() {
+        feedbackMessage = 'Incorrect. Try again!';
+      });
+    }
   }
 
   void _showHelp(String question) {
@@ -165,9 +197,26 @@ class _StoryScreenState extends State<StoryScreen> {
     });
   }
 
+  void _toggleTextInputForCurrentStep() {
+    setState(() {
+      if (stepsWithTextInput.contains(currentStep)) {
+        stepsWithTextInput.remove(currentStep);
+        tempInputController.clear();
+      } else {
+        stepsWithTextInput.add(currentStep);
+        tempInputController.text = '';
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEnd = false; // Never ends (infinite)
+
+    final showTextInput = stepsWithTextInput.contains(currentStep);
+    final currentStepObj = steps.isNotEmpty
+        ? steps[currentStep]
+        : VisualNovelStep(text: '', stateTag: 'default');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -177,18 +226,54 @@ class _StoryScreenState extends State<StoryScreen> {
           Positioned.fill(
             child: VisualNovelReader(
               character: mainCharacter,
-              step: steps.isNotEmpty
-                  ? steps[currentStep]
-                  : VisualNovelStep(text: '', stateTag: 'default'),
+              step: currentStepObj,
               isThinkingAnimated: isThinkingAnimated,
               onInput: _handleInput,
               onChoice: _handleChoice,
               // Pass help button builder
               helpButtonBuilder: () => IconButton(
-                icon: Icon(Icons.help_outline, color: Colors.blue),
-                tooltip: 'Need help with this question?',
-                onPressed: () => _showHelp(steps[currentStep].text),
+                icon: Icon(
+                  showTextInput ? Icons.close : Icons.help_outline,
+                  color: Colors.blue,
+                ),
+                tooltip: showTextInput
+                    ? 'Return to multi-choice'
+                    : 'Need help with this question?',
+                onPressed: _toggleTextInputForCurrentStep,
               ),
+              // Add a builder for the choices/text input UI
+              customChoicesBuilder: showTextInput
+                  ? (context, step) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: tempInputController,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              hintText:
+                                  'Type your answer or thoughts... (press Enter to submit)',
+                            ),
+                            onSubmitted: (val) {
+                              // Optionally handle input submission
+                              _handleInput(val);
+                              // Optionally auto-close text input after submit:
+                              setState(() {
+                                stepsWithTextInput.remove(currentStep);
+                                tempInputController.clear();
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton.icon(
+                            icon: Icon(Icons.arrow_back),
+                            label: Text('Back to choices'),
+                            onPressed: _toggleTextInputForCurrentStep,
+                          ),
+                        ],
+                      ),
+                    )
+                  : null,
             ),
           ),
           if (showHelp)
@@ -245,6 +330,27 @@ class _StoryScreenState extends State<StoryScreen> {
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (feedbackMessage != null)
+            Positioned(
+              bottom: 120,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Card(
+                  color: Colors.red[100],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 24,
+                    ),
+                    child: Text(
+                      feedbackMessage!,
+                      style: TextStyle(color: Colors.red[900]),
                     ),
                   ),
                 ),
