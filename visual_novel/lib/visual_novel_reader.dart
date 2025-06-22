@@ -1,3 +1,4 @@
+// visual_novel_reader.dart
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'visual_novel.dart';
@@ -213,11 +214,11 @@ class _VisualNovelReaderState extends State<VisualNovelReader>
                 if (widget.step.customWidget != null) ...[
                   const SizedBox(height: 10),
                   widget.step.customWidget!,
-                ] else if (widget.step.expectsInput) ...[
-                  const SizedBox(height: 10),
-                  _InputField(onInput: widget.onInput),
                 ] else if (widget.step.choices != null &&
-                    widget.step.choices!.isNotEmpty) ...[
+                    widget.step.choices!.isNotEmpty &&
+                    (widget.step.showChoicesInsteadOfInput ||
+                        !widget.step.expectsInput)) ...[
+                  // Show choices if showChoicesInsteadOfInput is true, or if not expecting input
                   const SizedBox(height: 10),
                   for (final choice in widget.step.choices!)
                     Padding(
@@ -227,6 +228,9 @@ class _VisualNovelReaderState extends State<VisualNovelReader>
                         child: Text(choice),
                       ),
                     )
+                ] else if (widget.step.expectsInput) ...[
+                  const SizedBox(height: 10),
+                  _InputField(onInput: widget.onInput),
                 ],
               ],
             ),

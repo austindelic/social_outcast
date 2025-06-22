@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_outcast/screens/country_list_screen.dart';
 import 'package:social_outcast/screens/lesson_menu_screen.dart';
 import 'package:social_outcast/screens/lesson_preferences_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   runApp(ProviderScope(child: const MyApp()));
@@ -18,14 +19,26 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    final baseLight = ThemeData.light();
+    // (If you use dark mode, you can do the same with ThemeData.dark())
+
     return MaterialApp(
       home: const MainTabs(),
       debugShowCheckedModeBanner: false,
+      theme: baseLight.copyWith(
+        textTheme: GoogleFonts.gamjaFlowerTextTheme(baseLight.textTheme),
+        primaryTextTheme: GoogleFonts.gamjaFlowerTextTheme(
+          baseLight.primaryTextTheme,
+        ),
+        // Optionally also:
+        // accentTextTheme: GoogleFonts.gamjaFlowerTextTheme(baseLight.accentTextTheme),
+        // scaffoldBackgroundColor: ...,  etc.
+      ),
       routes: {
-        LessonPreferencesScreen.routeName: (context) =>
+        LessonPreferencesScreen.routeName: (_) =>
             const LessonPreferencesScreen(),
-        LessonMenuScreen.routeName: (context) => const LessonMenuScreen(),
-        MapScreen.routeName: (context) => const MapScreen(),
+        LessonMenuScreen.routeName: (_) => const LessonMenuScreen(),
+        MapScreen.routeName: (_) => const MapScreen(),
       },
     );
   }

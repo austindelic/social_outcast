@@ -1,3 +1,5 @@
+// character_sprite.dart
+
 class CharacterSpriteState {
   final String asset; // default for single frame states
   final List<String> assetFrames; // for animation (e.g., thinking)

@@ -80,11 +80,15 @@ class _StoryScreenState extends State<StoryScreen> {
   List<Map<String, String>> messages = [
     {
       "role": "system",
-      "content": "You are my friend, talk to me in short consise snippets.",
+      "content":
+          "You are a friendly quizmaster AI. Generate a JSON array of 10 fun and educational multiple-choice questions about world cultures, traditions, or geography. Each question should be an object with the following fields: question (the question text), choices (an array of 3-5 possible answers), and answer (the correct answer, which must match one of the choices). Return only the JSON array, not a string or any extra commentary. Do not wrap the array in quotes or markdown. The output must be valid JSON and directly parsable. Example output: [ { \"question\": \"Which Japanese festival is known for its fireworks displays?\", \"choices\": [\"Hanami\", \"Obon\", \"Tanabata\", \"Setsubun\"], \"answer\": \"Tanabata\" }, { \"question\": \"In India, what is the name of the festival of colors?\", \"choices\": [\"Diwali\", \"Holi\", \"Navratri\", \"Ganesh Chaturthi\"], \"answer\": \"Holi\" } ]"
     },
-    {"role": "assistant", "content": "Welcome! What is your name?"},
+    {
+      "role": "assistant",
+      "content":
+          "Welcome! Ready to test your knowledge of world cultures? Here is your quiz:",
+    },
   ];
-
   List<VisualNovelStep> steps = [];
   int currentStep = 0;
   bool isThinkingAnimated = false;
@@ -100,7 +104,9 @@ class _StoryScreenState extends State<StoryScreen> {
         text: messages.last["content"]!,
         backgroundAsset: "assets/images/backgrounds/japan_1.png",
         stateTag: "default",
-        expectsInput: true,
+        expectsInput: false,
+        choices: ["Alice", "Bob", "Charlie"], // Example choices
+        showChoicesInsteadOfInput: true, // Use the new feature
       ),
     );
   }
@@ -117,7 +123,7 @@ class _StoryScreenState extends State<StoryScreen> {
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: {"messages": messages},
     );
-
+    print(response);
     // Parse assistant reply
     String aiReply;
     try {

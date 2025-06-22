@@ -1,3 +1,4 @@
+// visual_novel.dart
 // Export the widgets for consumers of the package
 export 'character_sprite.dart';
 export 'visual_novel_reader.dart';
@@ -24,6 +25,8 @@ class VisualNovelStep {
   final bool expectsInput;
   final List<String>? choices;
   final Widget? customWidget;
+  final bool
+      showChoicesInsteadOfInput; // NEW: allow forcing choices instead of input
 
   const VisualNovelStep({
     required this.text,
@@ -32,5 +35,6 @@ class VisualNovelStep {
     this.expectsInput = false,
     this.choices,
     this.customWidget,
+    this.showChoicesInsteadOfInput = false, // NEW: default to false
   });
 }
