@@ -53,12 +53,12 @@ dev_dependencies:
     sdk: flutter
 
 icons_launcher:
-  image_path: "assets/images/icon/ios_icon.png"
+  image_path: "assets/images/icon/android_icon.png"
   platforms:
     android:
       enable: true
     ios:
-      enable: true
+      enable: false
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
