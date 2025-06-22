@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_levels_scrolling_map/game_levels_scrolling_map.dart';
 import 'package:game_levels_scrolling_map/model/point_model.dart';
+import 'package:level_map/level_map.dart';
 //import '../components/stepping_stone_map.dart';
 
 
@@ -38,19 +39,43 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: SizedBox(
+        width: 100,
+        child: FloatingActionButton(
+          onPressed: () {
+            // Navigate to the lesson preferences screen
+        
+          },
+          child: Text('Move Next'),
+        ),
+      ),
       appBar: AppBar(title: const Text('Progress Map Example')),
-      body: Center(
-        child: SizedBox(
-          height: 600,
-          width: 400,
-          child: GameLevelsScrollingMap.scrollable(
-              imageUrl: "https://i.ibb.co/nMHHv7PR/Copilot-20250622-003755.png",
-              direction: Axis.vertical,
-              reverseScrolling: true,
-              points: points,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/backgrounds/map_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: LevelMap(
+          levelMapParams: LevelMapParams(
+            levelCount: 5,
+            currentLevel: 2.4,
+            currentLevelImage: ImageParams(
+              path: "assets/images/backgrounds/pngegg.png",
+              size: Size(30, 30),
+            ),
+            lockedLevelImage: ImageParams(
+              path: "assets/images/backgrounds/deactivated_stage.png",
+              size: Size(30, 30),
+            ),
+            completedLevelImage: ImageParams(
+              path: "assets/images/backgrounds/activated_stage.png",
+              size: Size(30, 30),
             ),
           ),
-      ),
+        ),
+      )
     );
   }
 }

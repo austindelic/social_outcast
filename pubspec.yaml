@@ -44,6 +44,7 @@ dependencies:
   visual_novel:
     path: ./visual_novel
   game_levels_scrolling_map: ^0.0.7
+  level_map: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +70,10 @@ flutter:
   assets:
     - assets/images/backgrounds/example.png
     - assets/images/backgrounds/map_background.png
+    - assets/images/backgrounds/deactivated_stage.png
+    - assets/images/backgrounds/activated_stage.png
     - assets/images/sprites/example.png
+    - assets/images/backgrounds/pngegg.png
     - assets/example.png
     -  .env
 
