@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:social_outcast/providers/preference_provider.dart';
 import 'package:social_outcast/screens/lesson_menu_screen.dart';
+import 'package:social_outcast/utilities/prefs_helper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LessonPreferencesScreen extends StatefulWidget {
+class LessonPreferencesScreen extends ConsumerStatefulWidget {
   static const String routeName = '/lesson-preferences';
   const LessonPreferencesScreen({Key? key}) : super(key: key);
 
@@ -12,8 +15,10 @@ class LessonPreferencesScreen extends StatefulWidget {
 
 enum DifficultyLevel { easy, medium, hard }
 
-class _LessonPreferencesScreenState extends State<LessonPreferencesScreen> {
+class _LessonPreferencesScreenState extends ConsumerState<LessonPreferencesScreen> {
   DifficultyLevel _selectedDifficulty = DifficultyLevel.easy;
+
+  String _selectedName = '';
 
   String _selectedTopic = 'Sightseeing';
   String _selectedFromCountry = 'USA';
@@ -46,6 +51,17 @@ class _LessonPreferencesScreenState extends State<LessonPreferencesScreen> {
         ),
       );
       
+      ref.read(preferenceProvider.notifier).setPreference(
+        Preference(
+          name: _selectedName,
+          level: _selectedDifficulty.name,
+          purpose: _selectedTopic,
+          fromCountry: _selectedFromCountry,
+          toCountry: _selectedToCountry,
+        ),
+      );
+      UserPreferences.setName(_selectedName);
+      
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,6 +78,34 @@ class _LessonPreferencesScreenState extends State<LessonPreferencesScreen> {
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: [
+          Column(
+            children: [
+              Container(height: 300, color: Colors.blue[100]),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Enter your username',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    _selectedName = value;
+                  },
+                ),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeIn,
+                  );
+                },
+                child: const Text('Next'),
+              ),
+            ],
+          ),
           Column(
             children: [
               Container(height: 300, color: Colors.blue[100]),

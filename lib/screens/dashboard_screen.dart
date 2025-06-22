@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_outcast/screens/lesson_menu_screen.dart';
 import 'package:social_outcast/screens/lesson_preferences_screen.dart';
+import 'package:social_outcast/utilities/prefs_helper.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -23,8 +24,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, LessonMenuScreen.routeName);
-              Navigator.pushNamed(context, LessonPreferencesScreen.routeName);
+              if(UserPreferences.getIsGenerated() == null || UserPreferences.getIsGenerated() == false) {
+                Navigator.pushNamed(context, LessonMenuScreen.routeName);
+                Navigator.pushNamed(context, LessonPreferencesScreen.routeName);
+              }
+              else{
+                Navigator.pushNamed(context, LessonMenuScreen.routeName);
+              }
+              
             },
             child: const Text("Get Started"),
           ),

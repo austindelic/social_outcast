@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_outcast/utilities/prefs_helper.dart';
 
 class LessonMenuScreen extends StatefulWidget {
   static const String routeName = '/lesson-menu';
@@ -10,11 +11,11 @@ class LessonMenuScreen extends StatefulWidget {
 
 enum QuestionType { fourOption, speech, text }
 
-class Lesson {
+class LessonType {
   final String genre;
   final QuestionType type;
 
-  Lesson({required this.genre, required this.type});
+  LessonType({required this.genre, required this.type});
 }
 
 class _LessonMenuScreenState extends State<LessonMenuScreen> {
@@ -37,22 +38,35 @@ class _LessonMenuScreenState extends State<LessonMenuScreen> {
   Accent
   */
   final lessons = [
-    Lesson(genre: 'Transportation', type: QuestionType.fourOption),
-    Lesson(genre: 'Hotel Behavior', type: QuestionType.fourOption),
-    Lesson(genre: 'Dining Etiquette', type: QuestionType.text),
-    Lesson(genre: 'Greetings and Introductions', type: QuestionType.speech),
-    Lesson(genre: 'Slang', type: QuestionType.speech),
-    Lesson(genre: 'Accent', type: QuestionType.fourOption),
-    Lesson(genre: 'Shopping Etiquette', type: QuestionType.fourOption),
-    Lesson(genre: 'Laws and Rules', type: QuestionType.fourOption),
-    Lesson(genre: 'Technology Use and Communication', type: QuestionType.text),
-    Lesson(genre: 'Cultural Sensitivities', type: QuestionType.text),
-    Lesson(genre: 'Business Situation', type: QuestionType.fourOption),
-    Lesson(genre: 'Home Stay', type: QuestionType.fourOption),
-    Lesson(genre: 'Basic Language', type: QuestionType.fourOption),
-    Lesson(genre: 'Behavior on Street', type: QuestionType.fourOption),
-    Lesson(genre: 'Accent', type: QuestionType.fourOption),
+    LessonType(genre: 'Transportation', type: QuestionType.fourOption),
+    LessonType(genre: 'Hotel Behavior', type: QuestionType.fourOption),
+    LessonType(genre: 'Dining Etiquette', type: QuestionType.text),
+    LessonType(genre: 'Greetings and Introductions', type: QuestionType.speech),
+    LessonType(genre: 'Slang', type: QuestionType.speech),
+    LessonType(genre: 'Accent', type: QuestionType.fourOption),
+    LessonType(genre: 'Shopping Etiquette', type: QuestionType.fourOption),
+    LessonType(genre: 'Laws and Rules', type: QuestionType.fourOption),
+    LessonType(genre: 'Technology Use and Communication', type: QuestionType.text),
+    LessonType(genre: 'Cultural Sensitivities', type: QuestionType.text),
+    LessonType(genre: 'Business Situation', type: QuestionType.fourOption),
+    LessonType(genre: 'Home Stay', type: QuestionType.fourOption),
+    LessonType(genre: 'Basic Language', type: QuestionType.fourOption),
+    LessonType(genre: 'Behavior on Street', type: QuestionType.fourOption),
+    LessonType(genre: 'Accent', type: QuestionType.fourOption),
   ];
+
+@override
+  void initState() {
+    super.initState();
+    if(UserPreferences.getIsGenerated() == true){
+      generateLessons();
+    }
+  }
+
+  Future<void> generateLessons() async {
+    
+    Navigator.pushNamed(context, '/lesson-screen');
+  }
 
   @override
   Widget build(BuildContext context) {
