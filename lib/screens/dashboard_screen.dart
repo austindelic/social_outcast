@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:social_outcast/screens/lesson_menu_screen.dart';
+import 'package:social_outcast/screens/lesson_preferences_screen.dart';
+import 'package:social_outcast/utilities/prefs_helper.dart';
 
 // MOVE THIS UP
 class DashboardCard extends StatelessWidget {
@@ -22,7 +25,10 @@ class DashboardCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       child: ListTile(
         leading: Icon(icon, size: 36),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         trailing: Text(
           value,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
