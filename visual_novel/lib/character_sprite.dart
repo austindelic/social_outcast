@@ -1,17 +1,22 @@
-import 'package:flutter/material.dart';
+// character_sprite.dart
 
-class CharacterSprite extends StatelessWidget {
-  final String imagePath;
-  final double height;
+class CharacterSpriteState {
+  final String asset; // default for single frame states
+  final List<String> assetFrames; // for animation (e.g., thinking)
+  final String tag;
 
-  const CharacterSprite({
-    super.key,
-    required this.imagePath,
-    this.height = 300,
+  const CharacterSpriteState({
+    required this.tag,
+    this.asset = '',
+    this.assetFrames = const [],
   });
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(imagePath, height: height);
-  }
+class Character {
+  final Map<String, CharacterSpriteState> states;
+
+  const Character({required this.states});
+
+  CharacterSpriteState getState(String tag) =>
+      states[tag] ?? states.values.first;
 }

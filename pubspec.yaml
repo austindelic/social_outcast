@@ -1,3 +1,4 @@
+# pubsec.yaml for social_outcast
 name: social_outcast
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
@@ -33,10 +34,21 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  google_fonts: ^6.0.0
   cupertino_icons: ^1.0.8
   dio: ^5.4.3 # (or latest version)
+  npdart: ^0.3.0
   visual_novel:
     path: ./visual_novel
+  culture_lessons:
+    path: ./culture_lessons
+  sqflite: ^2.4.2
+  flutter_riverpod: ^2.6.1
+  shared_preferences: ^2.5.3
+  http: ^1.4.0
+  flutter_dotenv: ^5.2.1
+  game_levels_scrolling_map: ^0.0.7
+  level_map: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -60,13 +72,25 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/backgrounds/example.png
-    - assets/images/sprites/example.png
-    - assets/example.png
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+    - assets/images/backgrounds/japan_1.png
+
+    - assets/images/sprites/otter/otter_default.png
+    - assets/images/sprites/otter/otter_thinking_1.png
+    - assets/images/backgrounds/map_background.png
+    - assets/images/backgrounds/deactivated_stage.png
+    - assets/images/backgrounds/activated_stage.png
+    - assets/images/sprites/otter/otter_thinking_2.png
+    - assets/images/sprites/otter/otter_thinking_3.png
+
+    - assets/images/sprites/dawg/dawg_default.png
+    - assets/images/sprites/dawg/dawg_thinking_1.png
+    - assets/images/backgrounds/pngegg.png
+    - assets/images/sprites/dawg/dawg_thinking_2.png
+    - assets/images/sprites/dawg/dawg_thinking_3.png
+
+    - assets/images/sprites/platypus/platypus_default.png
+
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
