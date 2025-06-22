@@ -3,6 +3,10 @@ import 'screens/account_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/story_screen.dart';
 import 'screens/map.dart';
+import 'screens/puzzle_runner_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:culture_lessons/culture_lessons.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -31,6 +35,7 @@ class _MainTabsState extends State<MainTabs> {
     MapScreen(),
     StoryScreen(),
     AccountScreen(),
+    PuzzleRunnerScreen(),
   ];
 
   void _onItemTapped(int idx) {
@@ -64,6 +69,7 @@ class _MainTabsState extends State<MainTabs> {
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Lessons'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
+          BottomNavigationBarItem(icon: Icon(Icons.extension), label: 'Puzzles'),
         ],
       ),
     );
