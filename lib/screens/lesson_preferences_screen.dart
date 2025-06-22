@@ -4,6 +4,9 @@ import 'package:social_outcast/providers/preference_provider.dart';
 import 'package:social_outcast/utilities/database_helper.dart';
 import 'package:social_outcast/utilities/prefs_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sqflite/sqlite_api.dart';
+
+enum DifficultyLevel { easy, medium, hard }
 
 class LessonPreferencesScreen extends ConsumerStatefulWidget {
   static const String routeName = '/lesson-preferences';
@@ -25,6 +28,7 @@ class _LessonPreferencesScreenState
   String? _fromCountry;
   String? _toCountry;
 
+
   // options
   final _purposes = ['Sightseeing', 'Business', 'Study', 'Visit People'];
   final _countries = ['USA', 'UK', 'Australia', 'China', 'Singapore', 'Japan'];
@@ -42,17 +46,17 @@ class _LessonPreferencesScreenState
       
       ref.read(preferenceProvider.notifier).setPreference(
         Preference(
-          level: _selectedDifficulty.name,
-          purpose: _selectedTopic,
-          fromCountry: _selectedFromCountry,
-          toCountry: _selectedToCountry,
+          level: _difficulty!.name,
+          purpose: _purpose!,
+          fromCountry: _fromCountry!,
+          toCountry: _toCountry!,
         ),
       );
-      UserPreferences.setName(_selectedName);
+      UserPreferences.setName(_name);
       MyCurriculumDatabaseHelper().insertData(
-        fromCountry: _selectedFromCountry,
-        toCountry: _selectedToCountry,
-        purpose: _selectedTopic,
+        fromCountry: _fromCountry!,
+        toCountry: _toCountry!,
+        purpose: _purpose!,
       );
       
       Navigator.pop(context);
@@ -116,7 +120,7 @@ class _LessonPreferencesScreenState
                         );
                       });
                     },
-                    child: SizedBox(width: 250, child: const Text("travel beginner & first visit")),
+                    child: const Text("travel beginner & first visit"),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -129,7 +133,7 @@ class _LessonPreferencesScreenState
                         );
                       });
                     },
-                    child: SizedBox(width: 250, child: const Text("travel enthusiast & first visit")),
+                    child: const Text("travel enthusiast & first visit"),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -142,7 +146,7 @@ class _LessonPreferencesScreenState
                         );
                       });
                     },
-                    child: SizedBox(width: 250, child: const Text("travel lover & has visited before")),
+                    child: const Text("travel lover & has visited before"),
                   ),
                 ],
               ),
@@ -165,7 +169,7 @@ class _LessonPreferencesScreenState
                         );
                       });
                     },
-                    child: SizedBox(width: 90, child: const Text("Sightseeing")),
+                    child: const Text("Sightseeing"),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -178,7 +182,7 @@ class _LessonPreferencesScreenState
                         );
                       });
                     },
-                    child: SizedBox(width: 90, child: const Text("Business")),
+                    child: const Text("Business"),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -191,7 +195,7 @@ class _LessonPreferencesScreenState
                         );
                       });
                     },
-                    child: SizedBox(width: 90, child: const Text("Study")),
+                    child: const Text("Study"),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -204,7 +208,7 @@ class _LessonPreferencesScreenState
                         );
                       });
                     },
-                    child: SizedBox(width: 90, child: const Text("Visit People")),
+                    child: const Text("Visit People"),
                   ),
                 ],
               ),
