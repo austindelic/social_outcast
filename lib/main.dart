@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'screens/account_screen.dart';
-import 'screens/dashboard_screen.dart';
 import 'screens/story_screen.dart';
 import 'screens/map.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -54,7 +53,6 @@ class _MainTabsState extends State<MainTabs> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    DashboardScreen(),
     CountryListScreen(),
     StoryScreen(),
     AccountScreen(),
