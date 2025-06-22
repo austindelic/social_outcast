@@ -21,8 +21,6 @@ class Puzzle {
     this.correctIndex,
   });
 
-
-
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -36,6 +34,7 @@ class Puzzle {
   factory Puzzle.fromMap(Map<String, dynamic> map) {
     return Puzzle(
       id: map['id'],
+      unitId: map['unitId'],
       type: PuzzleType.values[map['type']],
       prompt: map['prompt'],
       options:
@@ -44,38 +43,6 @@ class Puzzle {
     );
   }
 }
-
-class Lesson {
-  final int id;
-  final int unitId; // FK to Unit
-  final String subjectContext;
-  final String title;
-
-//   Lesson({
-//     required this.id,
-//     required this.unitId,
-//     required this.subjectContext,
-//     required this.title,
-//   });
-
-//   Map<String, dynamic> toMap() {
-//     return {
-//       'id': id,
-//       'unitId': unitId,
-//       'subjectContext': subjectContext,
-//       'title': title,
-//     };
-//   }
-
-//   factory Lesson.fromMap(Map<String, dynamic> map) {
-//     return Lesson(
-//       id: map['id'],
-//       unitId: map['unitId'],
-//       subjectContext: map['subjectContext'],
-//       title: map['title'],
-//     );
-//   }
-// }
 
 class Unit {
   final int id;
@@ -105,7 +72,6 @@ class Unit {
   }
 }
 
-
 class Trip {
   final int id;
   final String fromCountry;
@@ -124,8 +90,6 @@ class Trip {
       'toCountry': toCountry,
     };
   }
-
- 
 
   factory Trip.fromMap(Map<String, dynamic> map) {
     return Trip(
